@@ -2183,6 +2183,20 @@ function initMobilePicker() {
     });
     closeBtn.addEventListener('click', () => picker.classList.add('hidden'));
 
+    // Desktop: provide a visible trigger for choosing map (useful for testing and desktop UX)
+    const desktopSelectBtn = document.getElementById('desktopMapSelect');
+    if (desktopSelectBtn) desktopSelectBtn.addEventListener('click', () => picker.classList.remove('hidden'));
+
+    // Close picker with Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') picker.classList.add('hidden');
+    });
+
+    // Close when clicking on backdrop
+    picker.addEventListener('click', (e) => {
+        if (e.target === picker) picker.classList.add('hidden');
+    });
+
     // In-map get directions button
     mobileGetBtn.addEventListener('click', () => {
         // trigger the same handler as the main UI
@@ -2920,6 +2934,16 @@ function showDirectionsFloorNav(floors, initialIndex = 0) {
     currentRouteFloorIndex = Math.min(Math.max(initialIndex, 0), currentRouteFloors.length - 1);
     const nav = document.getElementById('directionsFloorNav');
     if (!nav) return;
+
+    // If the mobile map bar is visible, nudge the directions nav up so they don't overlap
+    const mobileBar = document.getElementById('mobileMapBar');
+    if (mobileBar && !mobileBar.classList.contains('hidden')) {
+        const h = Math.round(mobileBar.getBoundingClientRect().height);
+        nav.style.bottom = `${h + 24}px`;
+    } else {
+        nav.style.bottom = '16px';
+    }
+
     nav.classList.remove('hidden');
     nav.setAttribute('aria-hidden', 'false');
     updateDirectionsFloorNavState();
@@ -2932,6 +2956,8 @@ function hideDirectionsFloorNav() {
     if (!nav) return;
     nav.classList.add('hidden');
     nav.setAttribute('aria-hidden', 'true');
+    // reset any inline bottom offset we applied when mobile bar was visible
+    nav.style.bottom = '';
 }
 
 function updateDirectionsFloorNavState() {

@@ -1163,7 +1163,7 @@
             gap: 8px;
             padding: 8px 10px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-            z-index: 900; /* keep under sidebar */
+            z-index: 1003; /* above mobile bar (~1002), below sidebar */
             transition: transform 0.12s ease, opacity 0.12s ease;
         }
 
@@ -1254,11 +1254,9 @@
         display: none !important;
     }
 
-    /* Ensure mobile modal appears only for small screens */
-    @media (max-width: 768px) {
-        .mobile-modal:not(.hidden) {
-            display: flex !important;
-        }
+    /* Allow modal to show on both mobile and desktop when explicitly opened */
+    .mobile-modal:not(.hidden) {
+        display: flex !important;
     }
 
     /* Show mobile UI only on small screens when not .hidden */
@@ -1267,9 +1265,7 @@
             display: flex;
         }
 
-        .mobile-modal:not(.hidden) {
-            display: flex;
-        }
+
     }
 
     .mobile-modal-inner {
@@ -1333,10 +1329,17 @@
         font-size: 0.85rem;
     }
 
+    /* Desktop-only helpers */
+    .desktop-only { display: none; }
+    @media (min-width: 769px) {
+        .desktop-only { display: inline-block; margin-left: 12px; }
+    }
+
     /* Firefox scrollbar styling */
     .sidebar,
     .map-wrapper,
     .view-controls {
         scrollbar-width: thin;
         scrollbar-color: #cbd5e0 #f1f5f9;
+    }
     }
