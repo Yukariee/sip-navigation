@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indoor Navigation System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>   
+        </button>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-close" id="sidebarClose">✕</button>
+            <h1>Indoor Navigation</h1>
+
+            <div class="controls">
+                <div class="form-group">
+                    <label for="startLocation">Start Location</label>
+                    <div class="searchable-dropdown">
+                        <input type="text" id="startLocation" class="searchable-input" placeholder="Type location...">
+                        <ul id="startLocationList" class="dropdown-list hidden"></ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <div class="searchable-dropdown">
+                        <input type="text" id="destination" class="searchable-input" placeholder="Type location...">
+                        <ul id="destinationList" class="dropdown-list hidden"></ul>
+                    </div>
+                </div>
+
+                <button id="getDirections" class="btn-primary">Get Directions</button>
+                <button id="clearRoute" class="btn-secondary">Clear Route</button>
+            </div>
+
+            <div class="quick-access">
+                <h3>Quick Access</h3>
+                <button class="quick-btn" data-type="mentrance">Main Entrance</button>
+                <button class="quick-btn" data-type="offices">Registrar / Principals Office</button>
+                <button class="quick-btn" data-type="restrooms">Restrooms</button>
+                <button class="quick-btn" data-type="emergency">Emergency Exits</button>
+            </div>
+
+            <div class="view-controls">
+                <h3>Map Views</h3>
+                <button class="view-btn active" data-view="overall">Overall Campus</button>
+                <button class="view-btn" data-view="mainjhs">Junior Highschool Building</button>
+                <button class="view-btn" data-view="shsbldg">Senior Highschool Building</button>
+                <button class="view-btn" data-view="lower">Sub Senior Highschool Building</button>
+                <button class="view-btn" data-view="preschool">Pre-School Building</button>
+                <button class="view-btn" data-view="quadrangle">Quadrangle</button>
+                <button class="view-btn" data-view="shs-building"> Building</button>
+                <button class="view-btn" data-view="court">Court</button>
+                <button class="view-btn" data-view="shed">Shed</button>
+
+            </div>
+
+            <div id="infoPanel" class="info-panel hidden">
+                <h3>Information</h3>
+                <div id="infoContent"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="toolbar">
+                <button id="zoomIn" class="zoom-btn" title="Zoom In">+</button>
+                <button id="zoomOut" class="zoom-btn" title="Zoom Out">−</button>
+                <button id="resetView" class="zoom-btn" title="Reset View">Reset</button>
+                <span class="zoom-level" id="zoomLevel">100%</span>
+            </div>
+
+            <!-- Floor Selector -->
+            <div id="floorSelector" class="floor-selector hidden">
+                <label>Select Floor:</label>
+                <div id="floorButtonsContainer" class="floor-buttons-container"></div>
+            </div>  
+
+            <div class="map-wrapper" id="mapWrapper">
+                <!-- Floor navigation buttons (previous / next) -->
+                <div class="floor-nav" id="floorNav" aria-hidden="false">
+                    <button id="prevFloorBtn" class="floor-nav-btn" title="Previous Floor" aria-label="Previous Floor">◀</button>
+                    <div id="floorNavLabel" class="floor-nav-label" aria-live="polite"></div>
+                    <button id="nextFloorBtn" class="floor-nav-btn" title="Next Floor" aria-label="Next Floor">▶</button>
+                </div>
+
+                <!-- Directions-only floor nav: appears when a route spans multiple floors -->
+                <div class="directions-floor-nav hidden" id="directionsFloorNav" aria-hidden="true">
+                    <button id="dirPrevBtn" class="dir-nav-btn" title="Previous Step" aria-label="Previous Step">◀</button>
+                    <div id="dirFloorLabel" class="dir-floor-label" aria-live="polite"></div>
+                    <button id="dirNextBtn" class="dir-nav-btn" title="Next Step" aria-label="Next Step">▶</button>
+                </div>
+                <!-- Overall Campus View -->
+                <svg id="overallMap" class="floor-map active" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                            <feOffset dx="2" dy="2" result="offsetblur"/>
+                            <feComponentTransfer>
+                                <feFuncA type="linear" slope="0.3"/>
+                            </feComponentTransfer>
+                            <feMerge>
+                                <feMergeNode/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <style>
+                            .location-label { fill: #37474f; font-size: 13px; font-weight: 600; text-anchor: middle; pointer-events: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+                            .level-label { fill: #263238; font-size: 18px; font-weight: 700; text-anchor: middle; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+                            .building-bg { fill: #f8f9fa; stroke: #495057; stroke-width: 2; filter: url(#shadow); }
+                            .location-rect { fill: #e3f2fd; stroke: #1976d2; stroke-width: 1.5; cursor: pointer; transition: all 0.3s; rx: 4; }
+                            .location-rect:hover { fill: #bbdefb; stroke: #1565c0; stroke-width: 2; }
+                            .location-rect.start { fill: #66bb6a; stroke: #43a047; stroke-width: 3; }
+                            .location-rect.destination { fill: #ef5350; stroke: #e53935; stroke-width: 3; }
+                            .campus-bg { fill: #e8f5e9; }
+
+                            
+                            .campus-path { fill: #ffffff; stroke: #666; stroke-width: 2; cursor: pointer; transition: all 0.3s; }
+                            .campus-path:hover { fill: #a0a0a0; stroke: #333; stroke-width: 2.5; }
+                            .campus-path.start { fill: #66bb6a; stroke: #43a047; stroke-width: 3; }
+                            .campus-path.destination { fill: #ef5350; stroke: #e53935; stroke-width: 3; }
+                        </style>
+                    </defs>
+
+                    <rect class="campus-bg" x="0" y="0" width="1600" height="800"/>
+
+                    <path id="shs-bldg" class="location-rect" d="M706 360H500V90h206z"/>
+                    <path id="mamjhen" class="location-rect" d="M142 362v377H34V362z"/>
+                    <path id="quad-pres" class="location-rect" d="M1219 286V88h347v198z"/>
+                    <path class="location-rect" d="m1179,739.07l0,-408.07l386,0l0,408.07l-386,0z" id="pre-school"/>                    
+                    <path id="court" class="location-rect" d="M327 225v134H33V215z"/>
+                    <path id="svg_6" class="location-rect" d="M325 629v110H146V629z"/>
+                    <path id="svg_7" class="location-rect" d="m423 629 7 109H329v-97h44v-12z"/>
+                    <path id="svg_8" class="location-rect" d="M501 738h-68v-16h68z"/>
+                    <path id="svg_9" class="location-rect" d="M329 361h169v171H329z"/>
+                    <path id="svg_10" class="location-rect" d="M329 569h169v-33H329z"/>
+                    <path id="svg_11" class="location-rect" d="M548 586V400h-19v131h-4V412h-21v124h-3v33h3v17z"/>
+                    <path id="svg_12" class="location-rect" d="M706 590v149H504V590z"/>
+                    <path id="svg_14" class="location-rect" d="M710 603v136h464V603z"/>
+                    <path id="svg_15" class="location-rect" d="M710 90h393v43h71v92H920v68h259V90h36v203h350v33h-391v270H710V360m0-270v135m0-135v135m0 0v135m0-135v135"/>
+                </svg>
+
+                    <!--Junior High School-->               
+                <svg id="mainjhsMap" class="floor-map" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                
+                    <defs>
+                        <style>
+                            .location-path { fill: #dbdbdb; cursor: pointer; transition: all 0.3s; }
+                            .location-path:hover { fill: #78aee4; opacity: 0.8; }
+                            .location-path.start { fill: #8cf892; stroke: #43a047; stroke-width: 3; }
+                            .location-path.destination { fill: #ef5350; stroke: #e53935; stroke-width: 3; }
+                        </style>
+                    </defs>
+
+                    <path id="Main Building" d="m797,88l0,-50l-502,0l0,723l654,0l0,-386l551,0l0,-47l-493,0l0,-290l-51,0l0,290l-360,0l0,-97l353,0l0,-143l-152,0zm0,0l-207,0" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="registrar"  d="m507,607l0,-12l-206,0l0,161l206,0l0,-47m0,-102l2,0l0,23l-2,0m0,-23l0,23m0,0l0,18m0,0l2,0l0,61l-2,0m0,-61l0,61" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="accounting" d="m507,585l0,6l-206,0l0,-182l206,0l0,7m0,169l0,-12m0,12l2,0l0,-12l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,41m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,7" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="office1"    d="m848,580l-2,0l0,24l2,0m0,-24l0,24m0,-24l0,-43l98,0l0,220l-98,0l0,-153" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="g1"         d="m507,399l0,7l-206,0l0,-181l206,0l0,6m0,168l0,-11m0,11l2,0l0,-11l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,40m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,8" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="g2"         d="m507,49l0,-6l-206,0l0,178l206,0l0,-6m0,-166l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,44l-2,0m0,-44l0,44m0,0l0,41m0,0l2,0l0,36l-2,0m0,-36l0,36m0,0l0,16m0,0l2,0l0,11l-2,0m0,-11l0,11" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="g3"         d="m888,378l-294,0l0,152l294,0l0,-152z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="g4"         d="m946,91l0,136l-157,0l0,-136l157,0z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="uniform"    d="m787,193l-197,0l0,-102l197,0l0,102z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="rest" d="m896.63,499.22l0,-44.57l25.33,0l0,54.71l23.3,0l0,23.3l-48.63,0l0,-33.43zm0,-50.65l0,-70.91l25.33,0l0,70.91l-25.33,0z" fill="#fff" stroke="#000"/>
+                    <!--Decorations-->
+                    <path id="bench" d="m627,563l0,-26l169,0l0,26l-169,0z" fill="#ffffff" stroke="#000"/>
+                    <!--Stairs-->
+                    <path id="backstairs-1" d="m590,62l0,-19l197,0l0,38l-177,0l0,-19l-20,0zm0,0l178,0" fill="#dbdbdb" stroke="#000"/>
+                    <path id="stairs-1" stroke="#000" d="m840,704l0,52l-89,0c-95,0 -60,-19 -132,-25l-34,-2l0,-59l34,1c57,7 22,33 132,33l0,-41l89,0l0,41zm-36,37c0,-2 -1,-3 -2,-3l-22,0c-1,0 -2,1 -2,3l0,9l2,2l22,0l2,-2l0,-9zm30,0c0,-2 -1,-3 -2,-3l-21,0c-1,0 -2,1 -2,3l0,9l2,2l21,0l2,-2l0,-9z" fill="#dbdbdb" fill-rule="evenodd" clip-rule="evenodd"/>
+                           
+                </svg>
+
+                <svg id="groundjhsMap" class="floor-map" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+                   
+                    <path d="m293,766.5l219,0l0,-28l82,0s54,0 80,13s87,15 87,15l196,0l0,-433l-364,0l0,-102l364,0l0,-145l-147,0l0,-49l-517,0l0,729z" fill="#ffffff" id="Main Building" stroke="#000"/>                    
+                    <path class="location-path" id="library"   d="m507,607l0,-12l-206,0l0,161l206,0l0,-47m0,-102l2,0l0,23l-2,0m0,-23l0,23m0,0l0,18m0,0l2,0l0,61l-2,0m0,-61l0,61" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="b1"   d="m507,585l0,6l-206,0l0,-182l206,0l0,7m0,169l0,-12m0,12l2,0l0,-12l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,41m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,7" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="hele"   d="m848,580l-2,0l0,24l2,0m0,-24l0,24m0,-24l0,-43l98,0l0,220l-98,0l0,-153" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="b2"   d="m507,399l0,7l-206,0l0,-181l206,0l0,6m0,168l0,-11m0,11l2,0l0,-11l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,40m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,8" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="b3"         d="m507,49l0,-6l-206,0l0,178l206,0l0,-6m0,-166l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,44l-2,0m0,-44l0,44m0,0l0,41m0,0l2,0l0,36l-2,0m0,-36l0,36m0,0l0,16m0,0l2,0l0,11l-2,0m0,-11l0,11" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="b4"         d="m946,91l0,136l-157,0l0,-136l157,0z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="jhscanteen"         d="m888,378l-294,0l0,152l294,0l0,-152z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="clinic"    d="m787,193l-197,0l0,-102l197,0l0,102z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="groundrest" d="m896.63,499.22l0,-44.57l25.33,0l0,54.71l23.3,0l0,23.3l-48.63,0l0,-33.43zm0,-50.65l0,-70.91l25.33,0l0,70.91l-25.33,0z" fill="#fff" stroke="#000"/>
+
+                    
+                    <path id="backstairs-1.1" d="m590,62l0,-19l197,0l0,38l-177,0l0,-19l-20,0zm0,0l178,0" fill="#dbdbdb" stroke="#000"/>
+                    <path id="stairs-1.1" stroke="#000" d="m840,704l0,52l-89,0c-95,0 -60,-19 -132,-25l-34,-2l0,-59l34,1c57,7 22,33 132,33l0,-41l89,0l0,41zm-36,37c0,-2 -1,-3 -2,-3l-22,0c-1,0 -2,1 -2,3l0,9l2,2l22,0l2,-2l0,-9zm30,0c0,-2 -1,-3 -2,-3l-21,0c-1,0 -2,1 -2,3l0,9l2,2l21,0l2,-2l0,-9z" fill="#dbdbdb" fill-rule="evenodd" clip-rule="evenodd"/>
+               
+                </svg>
+
+                <!--basis-->
+                <svg id="mainjhs-secondMap" class="floor-map" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+
+                    <path d="m293,766.5l219,0l0,-28l82,0s54,0 80,13s87,15 87,15l196,0l0,-433l-364,0l0,-102l364,0l0,-145l-147,0l0,-49l-517,0l0,729z" fill="#ffffff" id="Main Building" stroke="#000"/>                    
+                    <path class="location-path" id="201"   d="m848,580l-2,0l0,24l2,0m0,-24l0,24m0,-24l0,-43l98,0l0,220l-98,0l0,-153" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="202"   d="m507,607l0,-12l-206,0l0,161l206,0l0,-47m0,-102l2,0l0,23l-2,0m0,-23l0,23m0,0l0,18m0,0l2,0l0,61l-2,0m0,-61l0,61" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="203"   d="m507,585l0,6l-206,0l0,-182l206,0l0,7m0,169l0,-12m0,12l2,0l0,-12l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,41m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,7" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="204"   d="m507,399l0,7l-206,0l0,-181l206,0l0,6m0,168l0,-11m0,11l2,0l0,-11l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,40m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,8" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="205"         d="m507,49l0,-6l-206,0l0,178l206,0l0,-6m0,-166l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,44l-2,0m0,-44l0,44m0,0l0,41m0,0l2,0l0,36l-2,0m0,-36l0,36m0,0l0,16m0,0l2,0l0,11l-2,0m0,-11l0,11" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="guidance-office"    d="m787,193l-197,0l0,-102l197,0l0,102z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="jhslab"         d="m946,91l0,136l-157,0l0,-136l157,0z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="comlab"         d="m888,378l-294,0l0,152l294,0l0,-152z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="secondrest" d="m896.63,499.22l0,-44.57l25.33,0l0,54.71l23.3,0l0,23.3l-48.63,0l0,-33.43zm0,-50.65l0,-70.91l25.33,0l0,70.91l-25.33,0z" fill="#fff" stroke="#000"/>
+
+                    
+                    <path id="backstairs-2" d="m590,62l0,-19l197,0l0,38l-177,0l0,-19l-20,0zm0,0l178,0" fill="#dbdbdb" stroke="#000"/>
+                    <path id="stairs-2" d="m840,704l0,52l-89,0c-95,0 -60,-19 -132,-25l-34,-2l0,-59l34,1c57,7 22,33 132,33l0,-41l89,0l0,41zm-36,37c0,-2 -1,-3 -2,-3l-22,0c-1,0 -2,1 -2,3l0,9l2,2l22,0l2,-2l0,-9zm30,0c0,-2 -1,-3 -2,-3l-21,0c-1,0 -2,1 -2,3l0,9l2,2l21,0l2,-2l0,-9z" fill="#dbdbdb" stroke="#000" fill-rule="evenodd" clip-rule="evenodd"/>
+
+                </svg>  
+                    
+
+                <!--start-->
+                <svg id="mainjhs-thirdMap" class="floor-map" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+             
+                    <path d="m293,766.5l219,0l0,-28l82,0s54,0 80,13s87,15 87,15l196,0l0,-433l-364,0l0,-102l364,0l0,-145l-147,0l0,-49l-517,0l0,729z" fill="#ffffff" id="Main Building" stroke="#000"/>                    
+                    <path class="location-path" id="301"   d="m848,580l-2,0l0,24l2,0m0,-24l0,24m0,-24l0,-43l98,0l0,220l-98,0l0,-153" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="302"   d="m507,607l0,-12l-206,0l0,161l206,0l0,-47m0,-102l2,0l0,23l-2,0m0,-23l0,23m0,0l0,18m0,0l2,0l0,61l-2,0m0,-61l0,61" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="303"   d="m507,585l0,6l-206,0l0,-182l206,0l0,7m0,169l0,-12m0,12l2,0l0,-12l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,41m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,7" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="304"   d="m507,399l0,7l-206,0l0,-181l206,0l0,6m0,168l0,-11m0,11l2,0l0,-11l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,40m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,8" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="305"         d="m507,49l0,-6l-206,0l0,178l206,0l0,-6m0,-166l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,44l-2,0m0,-44l0,44m0,0l0,41m0,0l2,0l0,36l-2,0m0,-36l0,36m0,0l0,16m0,0l2,0l0,11l-2,0m0,-11l0,11" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="principal-office"    d="m787,193l-197,0l0,-102l197,0l0,102z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="307"         d="m946,91l0,136l-157,0l0,-136l157,0z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="306"         d="m888,378l-294,0l0,152l294,0l0,-152z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="thirdrest" d="m896.63,499.22l0,-44.57l25.33,0l0,54.71l23.3,0l0,23.3l-48.63,0l0,-33.43zm0,-50.65l0,-70.91l25.33,0l0,70.91l-25.33,0z" fill="#fff" stroke="#000"/>
+
+                    
+                    <path id="backstairs-3" d="m590,62l0,-19l197,0l0,38l-177,0l0,-19l-20,0zm0,0l178,0" fill="#dbdbdb" stroke="#000"/>
+                    <path id="stairs-3" stroke="#000" d="m840,704l0,52l-89,0c-95,0 -60,-19 -132,-25l-34,-2l0,-59l34,1c57,7 22,33 132,33l0,-41l89,0l0,41zm-36,37c0,-2 -1,-3 -2,-3l-22,0c-1,0 -2,1 -2,3l0,9l2,2l22,0l2,-2l0,-9zm30,0c0,-2 -1,-3 -2,-3l-21,0c-1,0 -2,1 -2,3l0,9l2,2l21,0l2,-2l0,-9z" fill="#dbdbdb" fill-rule="evenodd" clip-rule="evenodd"/>
+
+                </svg>
+
+                <svg id="mainjhs-fourthMap" class="floor-map" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+              
+                    <path d="m293,766.5l219,0l0,-28l82,0s54,0 80,13s87,15 87,15l196,0l0,-433l-364,0l0,-102l364,0l0,-145l-147,0l0,-49l-517,0l0,729z" fill="#ffffff" id="Main Building" stroke="#000"/>                    
+                    <path class="location-path" id="401"   d="m848,580l-2,0l0,24l2,0m0,-24l0,24m0,-24l0,-43l98,0l0,220l-98,0l0,-153" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="402"   d="m507,607l0,-12l-206,0l0,161l206,0l0,-47m0,-102l2,0l0,23l-2,0m0,-23l0,23m0,0l0,18m0,0l2,0l0,61l-2,0m0,-61l0,61" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="403"   d="m507,585l0,6l-206,0l0,-182l206,0l0,7m0,169l0,-12m0,12l2,0l0,-12l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,41m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,7" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="404"   d="m507,399l0,7l-206,0l0,-181l206,0l0,6m0,168l0,-11m0,11l2,0l0,-11l-2,0m0,-157l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,46l-2,0m0,-46l0,46m0,0l0,40m0,0l2,0l0,45l-2,0m0,-45l0,45m0,0l0,8" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="405"         d="m507,49l0,-6l-206,0l0,178l206,0l0,-6m0,-166l2,0l0,11l-2,0m0,-11l0,11m0,0l0,7m0,0l2,0l0,44l-2,0m0,-44l0,44m0,0l0,41m0,0l2,0l0,36l-2,0m0,-36l0,36m0,0l0,16m0,0l2,0l0,11l-2,0m0,-11l0,11" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="faculty-4"    d="m787,193l-197,0l0,-102l197,0l0,102z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="407"         d="m946,91l0,136l-157,0l0,-136l157,0z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="406"         d="m888,378l-294,0l0,152l294,0l0,-152z" fill="#ffffff" stroke="#000"/>
+                    <path class="location-path" id="fourthrest" d="m896.63,499.22l0,-44.57l25.33,0l0,54.71l23.3,0l0,23.3l-48.63,0l0,-33.43zm0,-50.65l0,-70.91l25.33,0l0,70.91l-25.33,0z" fill="#fff" stroke="#000"/>
+
+                    
+                    <path id="backstairs-4" d="m590,62l0,-19l197,0l0,38l-177,0l0,-19l-20,0zm0,0l178,0" fill="#dbdbdb" stroke="#000"/>
+                    <path id="stairs-4" stroke="#000" d="m840,704l0,52l-89,0c-95,0 -60,-19 -132,-25l-34,-2l0,-59l34,1c57,7 22,33 132,33l0,-41l89,0l0,41zm-36,37c0,-2 -1,-3 -2,-3l-22,0c-1,0 -2,1 -2,3l0,9l2,2l22,0l2,-2l0,-9zm30,0c0,-2 -1,-3 -2,-3l-21,0c-1,0 -2,1 -2,3l0,9l2,2l21,0l2,-2l0,-9z" fill="#dbdbdb" fill-rule="evenodd" clip-rule="evenodd"/>
+
+                </svg>
+                
+                <svg id="mainjhs-fifthMap" class="floor-map" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+                <!--Llayout po ni monching-->
+                    <path d="m293,767l219,0l0,-28l82,0s54,0 80,13s87,15 87,15l196,0l0,-433l-364,0l0,-102l364,0l0,-145l-147,0l0,-49l-517,0l0,729z" fill="#fff" id="main-top" stroke="#000"/>
+                    <path class="location-path" d="m848,580l-2,0l0,24l2,0m0,-24l0,24m0,-24l0,-43l102,0l0,220l-102,0l0,-153" fill="#fff" id="501" stroke="#000"/>
+                    <path d="m590,62l0,-19l197,0l0,38l-177,0l0,-19l-20,0zm0,0l178,0" fill="#dbdbdb" id="backstairs-5" stroke="#000"/>
+                    <path clip-rule="evenodd" d="m840,704l0,52l-89,0c-95,0 -60,-19 -132,-25l-34,-2l0,-59l34,1c57,7 22,33 132,33l0,-41l89,0l0,41zm-36,37c0,-2 -1,-3 -2,-3l-22,0c-1,0 -2,1 -2,3l0,9l2,2l22,0l2,-2l0,-9zm30,0c0,-2 -1,-3 -2,-3l-21,0c-1,0 -2,1 -2,3l0,9l2,2l21,0l2,-2l0,-9z" fill="#dbdbdb" fill-rule="evenodd" id="stairs-5" stroke="#000"/>
+                    <path class="location-path" d="m506,511l0,8l-208,0l0,-234l208,0l0,8m0,218l0,-15m0,15l2,0l0,-15l-2,0m0,-203l2,0l0,14l-2,0m0,-14l0,14m0,0l0,9m0,0l2,0l0,59l-2,0m0,-59l0,59m0,0l0,53m0,0l2,0l0,58l-2,0m0,-58l0,58m0,0l0,10" fill="#fff" id="503" stroke="#000" transform="matrix(1 0 0 1.42672 0 -144.542)"/>
+                    <path class="location-path" d="m506,754l0,8l-208,0l0,-234l208,0l0,8m0,218l0,-15m0,15l2,0l0,-15l-2,0m0,-203l2,0l0,14l-2,0m0,-14l0,14m0,0l0,9m0,0l2,0l0,59l-2,0m0,-59l0,59m0,0l0,53m0,0l2,0l0,58l-2,0m0,-58l0,58m0,0l0,10" fill="#fff" id="502" stroke="#000" transform="matrix(1 0 0 0.678981 0 244.557)"/>
+                    <path class="location-path" d="m506,51l0,-8l-208,0l0,234l208,0l0,-8m0,-218l2,0l0,15l-2,0m0,-15l0,15m0,0l0,9m0,0l2,0l0,58l-2,0m0,-58l0,58m0,0l0,53m0,0l2,0l0,48l-2,0m0,-48l0,48m0,0l0,20m0,0l2,0l0,15l-2,0m0,-15l0,15" fill="#fff" id="504" stroke="#000" transform="matrix(1 0 0 0.91453 0 3.67521)"/>
+                    <path class="location-path" d="m953,91l0,136l-149,0l0,-103l58,0l0,-33l91,0z" fill="#fff" id="jhs-faculty" stroke="#000"/>
+                    <path class="location-path" d="m858.88,103.91l0,-13l-25,0l0,13l25,0zm-29,0l-26,0l0,-13l26,0l0,13z" fill="#ffffff" id="fifthrest" stroke="#000"/>
+                    <path class="location-path" d="m32.5,31.7l246,0l0,163l-278,0l0,-47m32,-116l0,116l-32,0m32,-116l-32,0m0,116l0,-69.5m0,-46.5l0,10m0,-10l0,-7.5m0,-17l0,-7.5" fill="#ffffff" id="tle-room" stroke="black" transform="matrix(1 0 0 1 592.5 334.8)"/>
+                    <path class="location-path" d="m950,428l-71,0l0,101l71,0l0,-101z" fill="#fff" id="unknown" stroke="#000"/>
+                </svg>
+               
+                
+                <!--Senior High School View-->
+                <svg id="shsbldgMap" class="floor-map" width="1600" height="800" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .location-pathz { fill: #dbdbdb; cursor: pointer; transition: all 0.3s; }
+                            .location-pathz:hover { fill: #1976d2; opacity: 0.8; }
+                            .location-pathz.start { fill: #66bb6a; stroke: #43a047; stroke-width: 8; }
+                            .location-pathz.destination { fill: #ef5350; stroke: #e53935; stroke-width: 8; }
+                        </style>
+                    </defs>
+                    
+                    <rect class="bgtest" x="0" y="0" width="1200" height="600"/>
+
+                    <!-- Main Building -->
+                    <path class="location-pathz" d="m792,35l-383,0l0,495l383,0l0,-495z" fill="#E9E4B4" id="shs-building" stroke="#000"/>
+                    
+                    <!-- Locker Breaker -->
+                    <path class="location-pathz" d="m511,359l0,-15l53,0l0,15l-53,0zm-59,0l0,-15l53,0l0,15l-53,0zm334,23l0,-28l-5,0l0,28l5,0z" fill="#7f0000" id="shs-locker-breaker" stroke="#000"/>
+                    
+                    <!-- Stairs -->
+                    <path class="location-pathz" d="m572,413l-155,0l0,111l128,0l0,-56l-77,-1l0,-5l105,1l0,-50z" fill="#5B3D3D" id="shs-stairs" stroke="#000"/>
+                    
+                    <!-- Girls Bathroom -->
+                    <path class="location-pathz" d="m785,414l0,111l-61,0l0,-103l21,0l0,-8l5,0l0,-3l29,0l0,3l5,0z" fill="#ffaaff" id="shs-girls-bathroom"/>
+                    <path d="m751,414l-5,0l0,8l-21,0l0,103l61,0l0,-111l-5,0m-29,0l0,-3l29,0l0,3m-29,0l29,0" fill="#ffaaff" stroke="#000" pointer-events="none"/>
+
+                    <!-- Boys Bathroom -->
+                    <path class="location-pathz" d="m656,525l0,-111l5,0l0,-3l33,0l0,3l7,0l0,8l21,0l0,103l-66,0z" fill="#aaffff" id="shs-boys-bathroom"/>
+                    <path d="m662,414l-5,0l0,111l66,0l0,-103l-21,0l0,-8l-7,0m-33,0l0,-3l33,0l0,3m-33,0l33,0" fill="#aaffff" stroke="#000" pointer-events="none"/>
+
+                    <!-- Room 1 -->
+                    <path class="location-pathz" d="m414,41l185,0l0,300l-185,0l0,-300zm4,303l0,-3l26,0l0,3l-26,0zm153,0l0,-3l23,0l0,3l-23,0z" fill="#00ffff" id="shs-room-1"/>
+                    <path d="m414,41l185,0l0,300l-185,0l0,-300zm4,303l0,-3l26,0l0,3l-26,0zm153,0l0,-3l23,0l0,3l-23,0z" fill="#00ffff" stroke="#000" pointer-events="none"/>
+
+                    <!-- Room 2 -->
+                    <path class="location-pathz" d="m601,41l186,0l0,300l-186,0l0,-300zm5,303l0,-3l23,0l0,3l-23,0zm171,0l0,-3l-26,0l0,3l26,0z" fill="#00ffff" id="shs-room-2"/>
+                    <path d="m601,41l186,0l0,300l-186,0l0,-300zm5,303l0,-3l23,0l0,3l-23,0zm171,0l0,-3l-26,0l0,3l26,0z" fill="#00ffff" stroke="#000" pointer-events="none"/>
+                </svg>
+
+
+
+
+                    <!-- Entrance Hall View -->
+                <svg id="entranceMap" class="floor-map" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .entrance-bg { fill: #f5f5f5; stroke: #607d8b; stroke-width: 3; }
+                        </style>
+                    </defs>
+
+                    <rect class="entrance-bg" x="30" y="30" width="740" height="540" rx="10"/>
+                    <text class="level-label" x="400" y="80">Entrance Hall</text>
+
+                    <rect id="ent-info-desk" class="location-rect" x="60" y="120" width="150" height="100" rx="6"/>
+                    <text class="location-label" x="135" y="175">Info Desk</text>
+
+                    <rect id="ent-restrooms" class="location-rect" x="240" y="120" width="140" height="100" rx="6"/>
+                    <text class="location-label" x="310" y="175">Restrooms</text>
+
+                    <rect id="ent-security" class="location-rect" x="410" y="120" width="140" height="100" rx="6"/>
+                    <text class="location-label" x="480" y="175">Security</text>
+
+                    <rect id="ent-directions" class="location-rect" x="580" y="120" width="160" height="100" rx="6"/>
+                    <text class="location-label" x="660" y="175">Directions</text>
+
+                    <rect id="ent-stairs" class="location-rect" x="60" y="250" width="130" height="110" rx="6"/>
+                    <text class="location-label" x="125" y="310">Stairs A</text>
+
+                    <rect id="ent-escalator" class="location-rect" x="220" y="250" width="130" height="110" rx="6"/>
+                    <text class="location-label" x="285" y="310">Escalator</text>
+
+                    <rect id="ent-elevator" class="location-rect" x="380" y="250" width="130" height="110" rx="6"/>
+                    <text class="location-label" x="445" y="310">Elevator</text>
+
+                    <rect id="ent-emergency" class="location-rect" x="540" y="250" width="200" height="110" rx="6"/>
+                    <text class="location-label" x="640" y="305">Emergency</text>
+                    <text class="location-label" x="640" y="325">Exit</text>
+
+                    <rect id="ent-main-entrance" class="location-rect" x="150" y="390" width="500" height="140" rx="6"/>
+                    <text class="location-label" x="400" y="465">Main Entrance Doors</text>
+                </svg>
+
+                <!-- Ground Level View -->
+                <svg id="" class="floor-map" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="campus-bg" x="0" y="0" width="1200" height="800"/>
+                    <text class="level-label" x="600" y="50">Ground Level</text>
+
+                    <rect id="ground-corridors" class="location-rect" x="50" y="80" width="1100" height="70" rx="6"/>
+                    <text class="location-label" x="600" y="120">Main Corridors</text>
+
+                    <rect id="ground-cafeteria" class="location-rect" x="70" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="190" y="255">Cafeteria</text>
+
+                    <rect id="ground-library" class="location-rect" x="340" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="460" y="255">Library</text>
+
+                    <rect id="ground-classrooms" class="location-rect" x="610" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="730" y="255">Classrooms</text>
+
+                    <rect id="ground-labs" class="location-rect" x="880" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="1000" y="255">Laboratories</text>
+
+                    <rect id="ground-restrooms" class="location-rect" x="70" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="140" y="410">Restrooms</text>
+
+                    <rect id="ground-offices" class="location-rect" x="240" y="350" width="190" height="110" rx="6"/>
+                    <text class="location-label" x="335" y="410">Offices</text>
+
+                    <rect id="ground-stairs" class="location-rect" x="460" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="530" y="410">Stairs</text>
+
+                    <rect id="ground-ramps" class="location-rect" x="630" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="700" y="410">Ramps</text>
+
+                    <rect id="ground-emergency" class="location-rect" x="800" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="870" y="405">Emergency</text>
+                    <text class="location-label" x="870" y="425">Exit</text>
+
+                    <rect id="ground-storage" class="location-rect" x="970" y="350" width="150" height="110" rx="6"/>
+                    <text class="location-label" x="1045" y="410">Storage</text>
+
+                    <rect id="ground-entrance" class="location-rect" x="250" y="490" width="700" height="250" rx="8"/>
+                    <text class="location-label" x="600" y="625">Main Entrance Area</text>
+                </svg>
+
+                <!-- Upper Level View -->
+                <svg id="upperMap" class="floor-map" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="campus-bg" x="0" y="0" width="1200" height="800"/>
+                    <text class="level-label" x="600" y="50">Upper Level</text>
+
+                    <rect id="upper-corridors" class="location-rect" x="50" y="80" width="1100" height="70" rx="6"/>
+                    <text class="location-label" x="600" y="120">Main Corridors</text>
+
+                    <rect id="upper-offices" class="location-rect" x="70" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="190" y="240">Administrative</text>
+                    <text class="location-label" x="190" y="260">Offices</text>
+
+                    <rect id="upper-classrooms" class="location-rect" x="340" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="460" y="255">Classrooms</text>
+
+                    <rect id="upper-meetings" class="location-rect" x="610" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="730" y="245">Meeting</text>
+                    <text class="location-label" x="730" y="265">Rooms</text>
+
+                    <rect id="upper-labs" class="location-rect" x="880" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="1000" y="245">Research</text>
+                    <text class="location-label" x="1000" y="265">Labs</text>
+
+                    <rect id="upper-restrooms" class="location-rect" x="70" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="140" y="410">Restrooms</text>
+
+                    <rect id="upper-lounge" class="location-rect" x="240" y="350" width="190" height="110" rx="6"/>
+                    <text class="location-label" x="335" y="400">Staff</text>
+                    <text class="location-label" x="335" y="420">Lounge</text>
+
+                    <rect id="upper-stairs" class="location-rect" x="460" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="530" y="410">Stairs</text>
+
+                    <rect id="upper-elevator" class="location-rect" x="630" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="700" y="410">Elevator</text>
+
+                    <rect id="upper-emergency" class="location-rect" x="800" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="870" y="405">Emergency</text>
+                    <text class="location-label" x="870" y="425">Exit</text>
+
+                    <rect id="upper-equipment" class="location-rect" x="970" y="350" width="150" height="110" rx="6"/>
+                    <text class="location-label" x="1045" y="410">Equipment</text>
+
+                    <rect id="upper-bridge" class="location-rect" x="250" y="490" width="700" height="250" rx="8"/>
+                    <text class="location-label" x="600" y="625">Bridge to Building B</text>
+                </svg>
+
+                <!-- Lower Level View -->
+                <svg id="lowerMap" class="floor-map" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="campus-bg" x="0" y="0" width="1200" height="800"/>
+                    <text class="level-label" x="600" y="50">Lower Level / Basement</text>
+
+                    <rect id="lower-corridors" class="location-rect" x="50" y="80" width="1100" height="70" rx="6"/>
+                    <text class="location-label" x="600" y="120">Main Corridors</text>
+
+                    <rect id="lower-storage" class="location-rect" x="70" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="190" y="255">Storage</text>
+
+                    <rect id="lower-utilities" class="location-rect" x="340" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="460" y="245">Utilities /</text>
+                    <text class="location-label" x="460" y="265">HVAC</text>
+
+                    <rect id="lower-servers" class="location-rect" x="610" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="730" y="245">Server</text>
+                    <text class="location-label" x="730" y="265">Room</text>
+
+                    <rect id="lower-archives" class="location-rect" x="880" y="180" width="240" height="140" rx="6"/>
+                    <text class="location-label" x="1000" y="255">Archives</text>
+
+                    <rect id="lower-restrooms" class="location-rect" x="70" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="140" y="410">Restrooms</text>
+
+                    <rect id="lower-breakroom" class="location-rect" x="240" y="350" width="190" height="110" rx="6"/>
+                    <text class="location-label" x="335" y="400">Break</text>
+                    <text class="location-label" x="335" y="420">Room</text>
+
+                    <rect id="lower-stairs" class="location-rect" x="460" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="530" y="410">Stairs</text>
+
+                    <rect id="lower-elevator" class="location-rect" x="630" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="700" y="410">Elevator</text>
+
+                    <rect id="lower-emergency" class="location-rect" x="800" y="350" width="140" height="110" rx="6"/>
+                    <text class="location-label" x="870" y="405">Emergency</text>
+                    <text class="location-label" x="870" y="425">Exit</text>
+
+                    <rect id="lower-parking" class="location-rect" x="970" y="350" width="150" height="110" rx="6"/>
+                    <text class="location-label" x="1045" y="400">Parking</text>
+                    <text class="location-label" x="1045" y="420">Access</text>
+
+                    <rect id="lower-exit" class="location-rect" x="250" y="490" width="700" height="250" rx="8"/>
+                    <text class="location-label" x="600" y="615">Emergency Exit /</text>
+                    <text class="location-label" x="600" y="635">Parking Level</text>
+                </svg>
+
+                <!-- Quadrangle View -->
+                <svg id="quadrangleMap" class="floor-map" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>
+                            .quad-bg { fill: #c8e6c9; }
+                            .quad-path { fill: #90a4ae; stroke: #607d8b; stroke-width: 2; }
+                            .quad-stage { fill: #fafafa; stroke: #424242; stroke-width: 2; }
+                            .bench { fill: #8d6e63; stroke: #5d4037; stroke-width: 2; }
+                        </style>
+                    </defs>
+
+                    <rect class="quad-bg" x="0" y="0" width="1200" height="800"/>
+                    <text class="level-label" x="600" y="50">Quadrangle Area</text>
+
+                    <!-- Quadrangle main area -->
+                    <rect id="quad" class="location-rect" fill="#dcedc8" x="100" y="100" width="1000" height="600" rx="10"/>
+
+                    <!-- Exit -->
+                    <rect id="quad-exit" class="location-rect quad-path" x="120" y="100" width="120" height="60" rx="6"/>
+                    <text class="location-label" x="180" y="135">Exit</text>
+
+                    <!-- Bench 1 -->
+                    <rect id="quad-bench" class="location-rect bench" x="300" y="150" width="600" height="80" rx="8"/>
+                    <text class="location-label" fill="#fff" x="600" y="195">Bench Area</text>
+
+                    <!-- Stage / Flag Area -->
+                    <rect id="flag" class="location-rect quad-stage" x="450" y="300" width="300" height="250" rx="8"/>
+                    <text class="location-label" x="600" y="390">Stage /</text>
+                    <text class="location-label" x="600" y="410">Flag Area</text>
+                    <circle fill="#c62828" cx="600" cy="450" r="30"/>
+                    <text class="location-label" fill="#fff" x="600" y="460">Flag</text>
+
+                    <!-- Bench 2 -->
+                    <rect id="quad-bench2" class="location-rect bench" x="350" y="600" width="500" height="80" rx="8"/>
+                    <text class="location-label" fill="#fff" x="600" y="645">Bench Area 2</text>
+
+                    <!-- Preschool Entrance -->
+                    <rect id="preschool-ent" class="location-rect" x="950" y="640" width="120" height="60" rx="6"/>
+                    <text class="location-label" x="1010" y="668">Preschool</text>
+                    <text class="location-label" x="1010" y="686">Entrance</text>
+
+                    </svg> 
+
+            </div>
+        </main>
+    </div>
+
+                <!-- Mobile Map Controls (moved outside map wrapper) -->
+                <div class="mobile-map-bar hidden" id="mobileMapBar" aria-hidden="true">
+                    <button id="mobileMapSelect" class="mobile-map-btn">Choose Map</button>
+                    <button id="mobileGetDirectionsBtn" class="btn-primary mobile-get-btn">Get Directions</button>
+                    <button id="mobileClearRouteBtn" class="btn-secondary mobile-clear-btn">Clear Route</button>
+                </div>
+
+                <!-- Mobile Map Picker Modal -->
+                <div id="mobileMapPicker" class="mobile-modal hidden" role="dialog" aria-modal="true" aria-labelledby="mobileMapPickerTitle">
+                    <div class="mobile-modal-inner">
+                        <h3 id="mobileMapPickerTitle">Choose Map View</h3>
+                        <div id="mobileMapOptions" class="mobile-map-options"></div>
+                        <button id="mobilePickerClose" class="btn-secondary">Close</button>
+                    </div>
+                </div>
+
+    <script src="script.js" defer></script>
+
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+    if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+    }
+    </script>
+
+
+</body>
+</html>
