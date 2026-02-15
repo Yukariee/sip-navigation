@@ -1625,6 +1625,10 @@ let dragStartY = 0;
 let translateX = 0;
 let translateY = 0;
 
+// last known pointer/touch (client coords). Used so zoom buttons can zoom at cursor/tap when available.
+let lastHoverClientX = null;
+let lastHoverClientY = null;
+
 // Pointer / inertia and rendering helpers
 let isPointerDown = false;
 let pointerId = null;
@@ -2430,6 +2434,8 @@ function attachUIEvents() {
     document.getElementById('getDirections').addEventListener('click', handleGetDirections);
     const clearBtn = document.getElementById('clearRoute');
     if (clearBtn) clearBtn.addEventListener('click', () => { clearPathFromMaps(); hideDirectionsFloorNav(); document.getElementById('infoPanel').classList.add('hidden'); });
+
+    // (toolbar Clear removed) sidebar Clear is primary for desktop too — no duplicate toolbar control needed.
     
     document.querySelectorAll('.quick-btn').forEach(btn =>
         btn.addEventListener('click', handleQuickAccess)
@@ -2440,12 +2446,24 @@ function attachUIEvents() {
     );
     
     document.getElementById('zoomIn').addEventListener('click', () => {
-        const rect = document.getElementById('mapWrapper').getBoundingClientRect();
-        changeZoom(0.1, rect.left + rect.width/2, rect.top + rect.height/2);
+        const mapWrapper = document.getElementById('mapWrapper');
+        const rect = mapWrapper.getBoundingClientRect();
+        const hoverInside = lastHoverClientX !== null && lastHoverClientY !== null &&
+            lastHoverClientX >= rect.left && lastHoverClientX <= rect.right &&
+            lastHoverClientY >= rect.top && lastHoverClientY <= rect.bottom;
+        const cx = hoverInside ? lastHoverClientX : (rect.left + rect.width/2);
+        const cy = hoverInside ? lastHoverClientY : (rect.top + rect.height/2);
+        changeZoom(0.1, cx, cy);
     });
     document.getElementById('zoomOut').addEventListener('click', () => {
-        const rect = document.getElementById('mapWrapper').getBoundingClientRect();
-        changeZoom(-0.1, rect.left + rect.width/2, rect.top + rect.height/2);
+        const mapWrapper = document.getElementById('mapWrapper');
+        const rect = mapWrapper.getBoundingClientRect();
+        const hoverInside = lastHoverClientX !== null && lastHoverClientY !== null &&
+            lastHoverClientX >= rect.left && lastHoverClientX <= rect.right &&
+            lastHoverClientY >= rect.top && lastHoverClientY <= rect.bottom;
+        const cx = hoverInside ? lastHoverClientX : (rect.left + rect.width/2);
+        const cy = hoverInside ? lastHoverClientY : (rect.top + rect.height/2);
+        changeZoom(-0.1, cx, cy);
     });
     document.getElementById('resetView').addEventListener('click', resetMapTransform);
 }
@@ -2470,6 +2488,11 @@ function setupMapInteractions() {
 
     // Unified pointer-based dragging (works for mouse, touch, pen)
     mapWrapper.addEventListener('pointerdown', e => {
+        // If the user clicked a UI control inside the map (floor-nav, directions nav, picker, buttons)
+        // we should NOT start a pan — allow the control to receive the event instead.
+        const uiControl = e.target.closest('button, .floor-nav, .directions-floor-nav, .mobile-map-bar, .mobile-map-btn, .mobile-get-btn, .mobile-clear-btn, .floor-btn, .dir-nav-btn, .floor-nav-btn, .view-btn');
+        if (uiControl) return;
+
         const clickable = e.target.closest('.location-rect, .campus-path, .location-path, .location-pathz');
         if (clickable) return;
 
@@ -2488,6 +2511,10 @@ function setupMapInteractions() {
     });
 
     document.addEventListener('pointermove', e => {
+        // always keep a recent hover/touch location (client coords) so zoom buttons can use cursor/tap
+        lastHoverClientX = e.clientX;
+        lastHoverClientY = e.clientY;
+
         if (!isPointerDown || e.pointerId !== pointerId) return;
         const now = performance.now();
         const x = e.clientX;
@@ -2548,9 +2575,17 @@ function setupMapInteractions() {
                 const delta = distance - lastDistance;
                 const centerX = (t1.clientX + t2.clientX) / 2;
                 const centerY = (t1.clientY + t2.clientY) / 2;
+                // keep hover point updated so UI (zoom buttons etc.) know latest focal point
+                lastHoverClientX = centerX;
+                lastHoverClientY = centerY;
                 changeZoom(delta > 0 ? 0.06 : -0.06, centerX, centerY);
             }
             lastDistance = distance;
+        } else if (e.touches && e.touches.length === 1) {
+            // track single-finger location for better mobile UX (used by double-tap / zoom buttons)
+            const t = e.touches[0];
+            lastHoverClientX = t.clientX;
+            lastHoverClientY = t.clientY;
         }
     }, { passive: false });
 
@@ -2570,9 +2605,10 @@ function setupMapInteractions() {
             const cx = touch ? touch.clientX : undefined;
             const cy = touch ? touch.clientY : undefined;
             const target = (zoomLevel > 1.4) ? 1 : Math.min(2, zoomLevel * 2);
+            e.preventDefault(); // prevent browser's double-tap zoom
             setZoom(target, cx, cy);
         }
-    }, { passive: true });
+    }, { passive: false });
 }
 
 // Schedule an rAF update (coalesces frequent events)
