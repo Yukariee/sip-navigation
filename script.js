@@ -2133,9 +2133,65 @@ const floorMap = {
     'groundjhs': [
         { id: 'groundjhsMap', name: 'Ground Level' }
     ],
-    'shs-bldg': [
-        { id: 'shs-bldgMap', name: 'Senior Highschool Building' }
+
+
+
+    // senior high building uses compact "shsbldg" view name (matching SVG ids)
+    'shsbldg': [
+        { id: 'shsbldgMap', name: 'Canteen' },
+        { id: 'second-shsbldgMap', name: 'Second Floor' },
+        { id: 'third-shsbldgMap', name: 'Third Floor' },
+        { id: 'fourth-shsbldgMap', name: 'Fourth Floor' }
     ],
+    // support deep‑linking to a particular floor (e.g. when a location points directly at it)
+    'second-shsbldg': [
+        { id: 'shsbldgMap', name: 'Canteen' },
+        { id: 'second-shsbldgMap', name: 'Second Floor' },
+        { id: 'third-shsbldgMap', name: 'Third Floor' },
+        { id: 'fourth-shsbldgMap', name: 'Fourth Floor' }
+    ],
+    'third-shsbldg': [
+        { id: 'shsbldgMap', name: 'Canteen' },
+        { id: 'second-shsbldgMap', name: 'Second Floor' },
+        { id: 'third-shsbldgMap', name: 'Third Floor' },
+        { id: 'fourth-shsbldgMap', name: 'Fourth Floor' }
+    ],
+    'fourth-shsbldg': [
+        { id: 'shsbldgMap', name: 'Canteen' },
+        { id: 'second-shsbldgMap', name: 'Second Floor' },
+        { id: 'third-shsbldgMap', name: 'Third Floor' },
+        { id: 'fourth-shsbldgMap', name: 'Fourth Floor' }
+    ],
+
+    // Sub SHS
+
+    'subshs': [
+        { id: 'subshsMap', name: 'Ground Level' },
+        { id: 'second-subshsMap', name: 'Second Floor' },
+        { id: 'third-subshsMap', name: 'Third Floor' },
+        { id: 'fourth-subshsMap', name: 'Fourth Floor' }
+    ],
+    'second-subshs': [
+        { id: 'subshsMap', name: 'Ground Level' },
+        { id: 'second-subshsMap', name: 'Second Floor' },
+        { id: 'third-subshsMap', name: 'Third Floor' },
+        { id: 'fourth-subshsMap', name: 'Fourth Floor' }
+    ],
+    'third-subshs': [
+        { id: 'subshsMap', name: 'Ground Level' },
+        { id: 'second-subshsMap', name: 'Second Floor' },
+        { id: 'third-subshsMap', name: 'Third Floor' },
+        { id: 'fourth-subshsMap', name: 'Fourth Floor' }
+    ],
+    'fourth-subshs': [
+        { id: 'subshsMap', name: 'Ground Level' },
+        { id: 'second-subshsMap', name: 'Second Floor' },
+        { id: 'third-subshsMap', name: 'Third Floor' },
+        { id: 'fourth-subshsMap', name: 'Fourth Floor' }
+    ],
+
+
+
     'overall': [
         { id: 'overallMap', name: 'Overall Campus' }
     ]
