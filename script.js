@@ -1450,6 +1450,360 @@ const locations = [
     y: 394,
     floor: 'mainjhs-fifthMap',
     view: 'mainjhs-fifth'
+  },
+
+  // SHS Building
+  {
+    id: 'shs-canteen',
+    name: 'SHS Canteen',
+    type: 'classroom',
+    x: 813,
+    y: 428,
+    floor: 'shsbldgMap',
+    view: 'shsbldg'
+  },
+  {
+    id: 'node-140',
+    name: 'node-140',
+    type: 'waypoint',
+    x: 677,
+    y: 706,
+    floor: 'shsbldgMap',
+    view: 'shsbldg'
+  },
+  {
+    id: 'node-141',
+    name: 'node-141',
+    type: 'waypoint',
+    x: 811,
+    y: 705,
+    floor: 'shsbldgMap',
+    view: 'shsbldg'
+  },
+  {
+    id: 'shs-stairent',
+    name: 'SHS Building Entrance',
+    type: 'entrance',
+    x: 558,
+    y: 706,
+    floor: 'shsbldgMap',
+    view: 'shsbldg'
+  },
+  {
+    id: 'node-144',
+    name: 'node-144',
+    type: 'waypoint',
+    x: 558,
+    y: 630,
+    floor: 'shsbldgMap',
+    view: 'shsbldg'
+  },
+  {
+    id: 'shs-stairs2',
+    name: 'shs stair 2',
+    type: 'stairs',
+    x: 724,
+    y: 619,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg',
+    connectsToFloor: 'third-shsbldgMap',
+    connectsToView: 'third-shsbldg'
+  },
+  {
+    id: 'shs-stairs2-pair',
+    name: 'shs stair 2 (from second-shsbldg)',
+    type: 'stairs',
+    x: 693,
+    y: 707,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg',
+    connectsToFloor: 'second-shsbldgMap',
+    connectsToView: 'second-shsbldg',
+    floorDirection: 'both'
+  },
+  {
+    id: 'A6',
+    name: 'Room A6',
+    type: 'classroom',
+    x: 773,
+    y: 461,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg',
+    connectsToFloor: 'third-shsbldgMap',
+    connectsToView: 'third-shsbldg'
+  },
+  {
+    id: 'A7',
+    name: 'Room A7',
+    type: 'classroom',
+    x: 825,
+    y: 461,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg',
+    connectsToFloor: 'third-shsbldgMap',
+    connectsToView: 'third-shsbldg'
+  },
+  {
+    id: 'shsrestG1',
+    name: 'Women Restroom SHS (Floor 2)',
+    type: 'restroom',
+    x: 1038,
+    y: 605,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'shsrestB1',
+    name: 'Men Restroom SHS (Floor 2)',
+    type: 'restroom',
+    x: 904,
+    y: 604,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'A8',
+    name: 'Room A8',
+    type: 'classroom',
+    x: 774,
+    y: 464,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'A9',
+    name: 'Room A9',
+    type: 'classroom',
+    x: 825,
+    y: 464,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'node-157',
+    name: 'node-157',
+    type: 'waypoint',
+    x: 775,
+    y: 707,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'node-158',
+    name: 'node-158',
+    type: 'waypoint',
+    x: 773,
+    y: 624,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'node-159',
+    name: 'node-159',
+    type: 'waypoint',
+    x: 774,
+    y: 523,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'node-160',
+    name: 'node-160',
+    type: 'waypoint',
+    x: 824,
+    y: 522,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'node-161',
+    name: 'node-161',
+    type: 'waypoint',
+    x: 828,
+    y: 624,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg'
+  },
+  {
+    id: 'shs-stairs3',
+    name: 'shs stair 3',
+    type: 'stairs',
+    x: 725,
+    y: 625,
+    floor: 'third-shsbldgMap',
+    view: 'third-shsbldg',
+    connectsToFloor: 'fourth-shsbldgMap',
+    connectsToView: 'fourth-shsbldg'
+  },
+  {
+    id: 'shs-stairs3-pair',
+    name: 'shs stair 3 (from third-shsbldg)',
+    type: 'stairs',
+    x: 694,
+    y: 706,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg',
+    connectsToFloor: 'third-shsbldgMap',
+    connectsToView: 'third-shsbldg',
+    floorDirection: 'both'
+  },
+  {
+    id: 'A10',
+    name: 'Room A10',
+    type: 'classroom',
+    x: 773,
+    y: 458,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'A11',
+    name: 'Room A11',
+    type: 'classroom',
+    x: 824,
+    y: 458,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'shsrestB2',
+    name: 'Men Restroom SHS (Floor 4)',
+    type: 'restroom',
+    x: 910,
+    y: 604,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'shsrestG2',
+    name: 'Women Restroom SHS (Floor 4)',
+    type: 'restroom',
+    x: 1037,
+    y: 602,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'node-162',
+    name: 'node-162',
+    type: 'waypoint',
+    x: 774,
+    y: 705,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'node-163',
+    name: 'node-163',
+    type: 'waypoint',
+    x: 773,
+    y: 529,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'node-164',
+    name: 'node-164',
+    type: 'waypoint',
+    x: 910,
+    y: 527,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'node-165',
+    name: 'node-165',
+    type: 'waypoint',
+    x: 1036,
+    y: 526,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'node-166',
+    name: 'node-166',
+    type: 'waypoint',
+    x: 827,
+    y: 528,
+    floor: 'fourth-shsbldgMap',
+    view: 'fourth-shsbldg'
+  },
+  {
+    id: 'node-175',
+    name: 'node-175',
+    type: 'waypoint',
+    x: 774,
+    y: 708,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'node-177',
+    name: 'node-177',
+    type: 'waypoint',
+    x: 774,
+    y: 619,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'node-178',
+    name: 'node-178',
+    type: 'waypoint',
+    x: 774,
+    y: 513,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'node-179',
+    name: 'node-179',
+    type: 'waypoint',
+    x: 826,
+    y: 514,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'node-180',
+    name: 'node-180',
+    type: 'waypoint',
+    x: 902,
+    y: 514,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'node-181',
+    name: 'node-181',
+    type: 'waypoint',
+    x: 1038,
+    y: 514,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg'
+  },
+  {
+    id: 'shs-stairs1',
+    name: 'shs stair 1 (from shsbldg)',
+    type: 'stairs',
+    x: 706,
+    y: 629,
+    floor: 'shsbldgMap',
+    view: 'shsbldg',
+    connectsToFloor: 'second-shsbldgMap',
+    connectsToView: 'second-shsbldg'
+  },
+  {
+    id: 'shs-stairs1-pair',
+    name: 'shs stair 1 (from shsbldg) (from shsbldg)',
+    type: 'stairs',
+    x: 697,
+    y: 707,
+    floor: 'second-shsbldgMap',
+    view: 'second-shsbldg',
+    connectsToFloor: 'shsbldgMap',
+    connectsToView: 'shsbldg',
+    floorDirection: 'both'
   }
 ];
 
@@ -1607,8 +1961,53 @@ const connections = [
   ['tle-room', 'node-138'],
   ['node-137', 'node-138'],
   ['node-137', 'node-132'],
-  ['node-137', 'node-130']
+  ['node-137', 'node-130'],
+  
+  // SHS Building connections
+  ['node-140', 'node-141'],
+  ['node-141', 'shs-canteen'],
+  ['shs-stairent', 'node-140'],
+  ['shs-stairent', 'node-144'],
+  ['shs-stairs2', 'shs-stairs2-pair'],
+  ['node-159', 'A8'],
+  ['node-160', 'node-159'],
+  ['node-160', 'A9'],
+  ['node-159', 'node-158'],
+  ['node-161', 'node-160'],
+  ['node-158', 'node-161'],
+  ['node-158', 'node-157'],
+  ['shs-stairs2-pair', 'node-157'],
+  ['shs-stairs3', 'shs-stairs3-pair'],
+  ['node-158', 'shs-stairs3'],
+  ['A10', 'node-163'],
+  ['A11', 'node-166'],
+  ['node-166', 'node-164'],
+  ['node-164', 'node-165'],
+  ['node-165', 'shsrestG2'],
+  ['shsrestB2', 'node-164'],
+  ['node-163', 'node-166'],
+  ['node-163', 'node-162'],
+  ['node-162', 'shs-stairs3-pair'],
+  ['node-177', 'node-175'],
+  ['node-177', 'node-178'],
+  ['shs-stairs2', 'node-177'],
+  ['node-178', 'A6'],
+  ['node-179', 'A7'],
+  ['node-178', 'node-179'],
+  ['node-180', 'node-179'],
+  ['node-180', 'node-181'],
+  ['node-181', 'shsrestG1'],
+  ['node-180', 'shsrestB1'],
+  ['shs-stairs1', 'shs-stairs1-pair'],
+  ['node-175', 'shs-stairs1-pair'],
+  ['node-144', 'shs-stairs1']
+
+  // Sub-SHS Building
+  
 ];
+
+
+
 /*************************************************
  * GLOBAL STATE
  *************************************************/
@@ -2191,6 +2590,32 @@ const floorMap = {
     ],
 
 
+    // Pre-School
+
+    'preschool': [
+        { id: 'preschoolMap', name: 'Pre-School' },
+        { id: 'second-preschoolMap', name: 'Pre-School Second Floor' },
+        { id: 'third-preschoolMap', name: 'Pre-School Third Floor' },
+        { id: 'fourth-preschoolMap', name: 'Pre-School Fourth Floor' }
+    ],
+    'second-preschool': [
+        { id: 'preschoolMap', name: 'Pre-School' },
+        { id: 'second-preschoolMap', name: 'Pre-School Second Floor' },
+        { id: 'third-preschoolMap', name: 'Pre-School Third Floor' },
+        { id: 'fourth-preschoolMap', name: 'Pre-School Fourth Floor' }
+    ],
+    'third-preschool': [
+        { id: 'preschoolMap', name: 'Pre-School' },
+        { id: 'second-preschoolMap', name: 'Pre-School Second Floor' },
+        { id: 'third-preschoolMap', name: 'Pre-School Third Floor' },
+        { id: 'fourth-preschoolMap', name: 'Pre-School Fourth Floor' }
+    ],
+    'fourth-preschool': [
+        { id: 'preschoolMap', name: 'Pre-School' },
+        { id: 'second-preschoolMap', name: 'Pre-School Second Floor' },
+        { id: 'third-preschoolMap', name: 'Pre-School Third Floor' },
+        { id: 'fourth-preschoolMap', name: 'Pre-School Fourth Floor' }
+    ],
 
     'overall': [
         { id: 'overallMap', name: 'Overall Campus' }
