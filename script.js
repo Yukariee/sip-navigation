@@ -4006,7 +4006,9 @@ function setupMapInteractions() {
     let pinchActive = false;   // true when pinching with exactly 2 pointers
     let panStartX = 0;         // clientX at pan start minus translateX
     let panStartY = 0;
-    let pinchStartDist = 0;    // pixel distance between two fingers at pinch start
+    let pinchStartTranslateX = 0;  // translateX at pinch start
+    let pinchStartTranslateY = 0;  // translateY at pinch start
+    let pinchStartDist = 0;        // pixel distance between two fingers at pinch start
     let pinchStartZoom = 0;    // zoomLevel at pinch start
     let pinchStartMidX = 0;    // midpoint of two fingers at pinch start (client coords)
     let pinchStartMidY = 0;
@@ -4027,6 +4029,8 @@ function setupMapInteractions() {
         pinchStartZoom = zoomLevel;
         pinchStartMidX = (p1.x + p2.x) / 2;
         pinchStartMidY = (p1.y + p2.y) / 2;
+        pinchStartTranslateX = translateX;
+        pinchStartTranslateY = translateY;
         pinchActive = true;
     }
 
@@ -4085,30 +4089,24 @@ function setupMapInteractions() {
             const currentMidX = (p1.x + p2.x) / 2;
             const currentMidY = (p1.y + p2.y) / 2;
 
-            // Ratio-based zoom so it feels proportional (not fixed step)
+            // New zoom: ratio-based from start zoom, clamped
             const newZoom = Math.min(Math.max(pinchStartZoom * (currentDist / pinchStartDist), 0.5), 4);
 
-            const mapWrapper2 = document.getElementById('mapWrapper');
-            const rect = mapWrapper2.getBoundingClientRect();
+            const rect = mapWrapper.getBoundingClientRect();
 
-            // Midpoint in wrapper-local coords
-            const midX = currentMidX - rect.left;
-            const midY = currentMidY - rect.top;
+            // The map-local point that was under the START midpoint (in start transform space)
+            const startMidLocalX = (pinchStartMidX - rect.left - pinchStartTranslateX) / pinchStartZoom;
+            const startMidLocalY = (pinchStartMidY - rect.top  - pinchStartTranslateY) / pinchStartZoom;
 
-            // Also pan with the midpoint movement (two-finger pan while pinching)
+            // Pan delta: how much the midpoint has moved since pinch start
             const dmx = currentMidX - pinchStartMidX;
             const dmy = currentMidY - pinchStartMidY;
 
-            // Focal point: we compute what the map-local coordinate under the CURRENT midpoint is
-            // based on the STARTING zoom/translate, then reposition so that local point stays under midpoint
-            // We also incorporate the midpoint pan delta.
-            const pinchLocalX = (midX - dmx - translateX) / zoomLevel;
-            const pinchLocalY = (midY - dmy - translateY) / zoomLevel;
+            // New translate: keep start-focal-point under current midpoint, plus pan
+            translateX = (currentMidX - rect.left) - startMidLocalX * newZoom;
+            translateY = (currentMidY - rect.top)  - startMidLocalY * newZoom;
 
-            translateX = midX - pinchLocalX * newZoom;
-            translateY = midY - pinchLocalY * newZoom;
             zoomLevel = newZoom;
-
             document.getElementById('zoomLevel').textContent = `${Math.round(zoomLevel * 100)}%`;
             scheduleUpdate();
         }
@@ -4119,21 +4117,14 @@ function setupMapInteractions() {
         activePointers.delete(e.pointerId);
 
         if (activePointers.size === 0) {
-            // All fingers lifted — launch inertia if we were panning
+            // All fingers lifted — stop immediately, no inertia/momentum
             mapWrapper.classList.remove('dragging');
             document.body.classList.remove('no-select');
             panActive = false;
             pinchActive = false;
-            if (lastPositions.length >= 2) {
-                const a = lastPositions[0];
-                const b = lastPositions[lastPositions.length - 1];
-                const dt = (b.t - a.t) / 1000;
-                if (dt > 0 && dt < 0.2) {
-                    velocityX = (b.x - a.x) / dt;
-                    velocityY = (b.y - a.y) / dt;
-                    startInertia();
-                }
-            }
+            // Cancel any leftover inertia animation
+            if (inertiaRaf) { cancelAnimationFrame(inertiaRaf); inertiaRaf = null; }
+            velocityX = velocityY = 0;
         } else if (activePointers.size === 1) {
             // Went from pinch to single finger — resume panning from current position
             pinchActive = false;
@@ -4360,8 +4351,7 @@ function switchView(view) {
     
     currentView = view;
     updateFloorSelector(view);
-    // Reset zoom when switching views (different building/area)
-    resetMapTransform();
+    // Do NOT reset zoom/pan when switching views — preserve the user's zoom level
     // keep mobile UI in sync
     updateMobileMapLabel(view);
     
