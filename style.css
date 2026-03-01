@@ -653,6 +653,8 @@
         touch-action: none; /* disable default browser panning so we can handle gestures */
         -webkit-user-select: none;
         user-select: none;
+        overscroll-behavior: contain; /* prevent pull-to-refresh when panning near edge */
+        -webkit-tap-highlight-color: transparent;
     }
 
     /* Dragging cursor state */
@@ -1332,6 +1334,42 @@
         background: #fff;
         cursor: pointer;
         font-weight: 600;
+    }
+
+    /* Ensure mobile-only UI is fully hidden on desktop (prevents accidental reveal on scroll) */
+    @media (min-width: 769px) {
+        .mobile-map-bar,
+        .mobile-map-bar:not(.hidden),
+        .mobile-modal,
+        .mobile-modal:not(.hidden),
+        .mobile-modal-inner,
+        #mobileMapBar,
+        #mobileClearRouteBtn,
+        #clearRoute,
+        .mobile-clear-btn {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+        }
+    }
+
+    /* Additional desktop detection for devices with fine pointer + hover (typical desktops) */
+    @media (hover: hover) and (pointer: fine) {
+        .mobile-map-bar,
+        .mobile-map-bar:not(.hidden),
+        .mobile-modal,
+        .mobile-modal:not(.hidden),
+        .mobile-modal-inner,
+        #mobileMapBar,
+        #mobileClearRouteBtn,
+        #clearRoute,
+        .mobile-clear-btn {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+        }
     }
 
     .btn-secondary {

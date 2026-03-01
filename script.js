@@ -96,8 +96,8 @@ const locations = [
     id: 'node-1',
     name: 'node-1',
     type: 'waypoint',
-    x: 551,
-    y: 700,
+    x: 550,
+    y: 699,
     floor: 'mainjhsMap',
     view: 'mainjhs'
   },
@@ -682,7 +682,7 @@ const locations = [
     id: 'node-106',
     name: 'Ground Stairs (from groundjhs)',
     type: 'stairs',
-    x: 602,
+    x: 601,
     y: 699,
     floor: 'mainjhsMap',
     view: 'mainjhs',
@@ -1451,8 +1451,6 @@ const locations = [
     floor: 'mainjhs-fifthMap',
     view: 'mainjhs-fifth'
   },
-
-  // SHS Building
   {
     id: 'shs-canteen',
     name: 'SHS Canteen',
@@ -1804,9 +1802,945 @@ const locations = [
     connectsToFloor: 'shsbldgMap',
     connectsToView: 'shsbldg',
     floorDirection: 'both'
+  },
+  {
+    id: 'subshs-restroom',
+    name: 'Restroom (Sub-SHS)',
+    type: 'restroom',
+    x: 557,
+    y: 184,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'A1',
+    name: 'Room A1',
+    type: 'classroom',
+    x: 960,
+    y: 582,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'node-200',
+    name: 'node-200',
+    type: 'waypoint',
+    x: 960,
+    y: 640,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'node-201',
+    name: 'node-201',
+    type: 'waypoint',
+    x: 557,
+    y: 639,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'node-202',
+    name: 'node-202',
+    type: 'waypoint',
+    x: 1113,
+    y: 641,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'node-203',
+    name: 'node-203',
+    type: 'waypoint',
+    x: 1113,
+    y: 550,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'subshs-stairs1',
+    name: 'subshs-stairs1',
+    type: 'stairs',
+    x: 1035,
+    y: 578,
+    floor: 'subshsMap',
+    view: 'subshs',
+    connectsToFloor: 'second-subshsMap',
+    connectsToView: 'second-subshs'
+  },
+  {
+    id: 'subshs-stairs1-pair',
+    name: 'subshs-stairs1 (from subshs)',
+    type: 'stairs',
+    x: 1045,
+    y: 677,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'subshsMap',
+    connectsToView: 'subshs',
+    floorDirection: 'both'
+  },
+  {
+    id: 'subshs-stairs2',
+    name: 'subshs-stairs2',
+    type: 'stairs',
+    x: 1117,
+    y: 621,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'subshs-stairs2-pair',
+    name: 'subshs-stairs2 (from second-subshs)',
+    type: 'stairs',
+    x: 1042,
+    y: 671,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'second-subshsMap',
+    connectsToView: 'second-subshs',
+    floorDirection: 'both'
+  },
+  {
+    id: 'A3',
+    name: 'Room A3',
+    type: 'classroom',
+    x: 964,
+    y: 589,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'A2',
+    name: 'Room A2',
+    type: 'classroom',
+    x: 689,
+    y: 590,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'node-204',
+    name: 'node-204',
+    type: 'waypoint',
+    x: 689,
+    y: 677,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'node-205',
+    name: 'node-205',
+    type: 'waypoint',
+    x: 964,
+    y: 676,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'node-206',
+    name: 'node-206',
+    type: 'waypoint',
+    x: 1118,
+    y: 678,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'A4',
+    name: 'Room A4',
+    type: 'classroom',
+    x: 689,
+    y: 587,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'A5',
+    name: 'Room A5',
+    type: 'classroom',
+    x: 960,
+    y: 586,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'node-207',
+    name: 'node-207',
+    type: 'waypoint',
+    x: 689,
+    y: 670,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'node-208',
+    name: 'node-208',
+    type: 'waypoint',
+    x: 960,
+    y: 670,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'node-209',
+    name: 'node-209',
+    type: 'waypoint',
+    x: 1122,
+    y: 671,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs'
+  },
+  {
+    id: 'subshs-stairs3',
+    name: 'subshs-stairs3',
+    type: 'stairs',
+    x: 1122,
+    y: 603,
+    floor: 'third-subshsMap',
+    view: 'third-subshs',
+    connectsToFloor: 'fourth-subshsMap',
+    connectsToView: 'fourth-subshs'
+  },
+  {
+    id: 'subshs-stairs3-pair',
+    name: 'subshs-stairs3 (from third-subshs)',
+    type: 'stairs',
+    x: 1044,
+    y: 675,
+    floor: 'fourth-subshsMap',
+    view: 'fourth-subshs',
+    connectsToFloor: 'third-subshsMap',
+    connectsToView: 'third-subshs',
+    floorDirection: 'both'
+  },
+  {
+    id: 'science-lab',
+    name: 'Science Laboratory (Sub-SHS)',
+    type: 'classroom',
+    x: 941,
+    y: 577,
+    floor: 'fourth-subshsMap',
+    view: 'fourth-subshs',
+    connectsToFloor: 'fourth-subshsMap',
+    connectsToView: 'fourth-subshs'
+  },
+  {
+    id: 'node-210',
+    name: 'node-210',
+    type: 'waypoint',
+    x: 941,
+    y: 676,
+    floor: 'fourth-subshsMap',
+    view: 'fourth-subshs',
+    connectsToFloor: 'fourth-subshsMap',
+    connectsToView: 'fourth-subshs'
+  },
+  {
+    id: 'node-211',
+    name: 'node-211',
+    type: 'waypoint',
+    x: 1112,
+    y: 423,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'node-212',
+    name: 'node-212',
+    type: 'waypoint',
+    x: 1034,
+    y: 423,
+    floor: 'subshsMap',
+    view: 'subshs'
+  },
+  {
+    id: 'shsfaculty',
+    name: 'SHS Facilty',
+    type: 'classroom',
+    x: 971,
+    y: 148,
+    floor: 'preschoolMap',
+    view: 'preschool'
+  },
+  {
+    id: 'ps1',
+    name: 'Room PS-1',
+    type: 'classroom',
+    x: 918,
+    y: 462,
+    floor: 'preschoolMap',
+    view: 'preschool'
+  },
+  {
+    id: 'ps2',
+    name: 'Room PS-2',
+    type: 'classroom',
+    x: 870,
+    y: 462,
+    floor: 'preschoolMap',
+    view: 'preschool'
+  },
+  {
+    id: 'preschool-stair1',
+    name: 'preschool-stair1',
+    type: 'stairs',
+    x: 982,
+    y: 373,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'preschool-stair1-pair',
+    name: 'preschool-stair1 (from preschool)',
+    type: 'stairs',
+    x: 924,
+    y: 356,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'preschoolMap',
+    connectsToView: 'preschool',
+    floorDirection: 'both'
+  },
+  {
+    id: 'node-230',
+    name: 'node-230',
+    type: 'waypoint',
+    x: 1019,
+    y: 148,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-231',
+    name: 'node-231',
+    type: 'waypoint',
+    x: 1021,
+    y: 374,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-232',
+    name: 'node-232',
+    type: 'waypoint',
+    x: 1021,
+    y: 428,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-233',
+    name: 'node-233',
+    type: 'waypoint',
+    x: 917,
+    y: 427,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-234',
+    name: 'node-234',
+    type: 'waypoint',
+    x: 870,
+    y: 426,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'playroom',
+    name: 'Playroom',
+    type: 'classroom',
+    x: 924,
+    y: 311,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'ps3',
+    name: 'Room PS-3',
+    type: 'classroom',
+    x: 883,
+    y: 353,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'preschool-stair2',
+    name: 'preschool-stair2',
+    type: 'stairs',
+    x: 926,
+    y: 434,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool'
+  },
+  {
+    id: 'preschool-stair2-pair',
+    name: 'preschool-stair2 (from second-preschool)',
+    type: 'stairs',
+    x: 924,
+    y: 473,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool',
+    floorDirection: 'both'
+  },
+  {
+    id: 'preschool-stair3',
+    name: 'preschool-stair3',
+    type: 'stairs',
+    x: 1073,
+    y: 393,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'preschool-stair3-pair',
+    name: 'preschool-stair3 (from third-preschool)',
+    type: 'stairs',
+    x: 1074,
+    y: 367,
+    floor: 'fourth-preschoolMap',
+    view: 'fourth-preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool',
+    floorDirection: 'both'
+  },
+  {
+    id: 'tutorial-room',
+    name: 'Tutorial Room',
+    type: 'classroom',
+    x: 882,
+    y: 392,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'sportsroom',
+    name: 'Sports Room',
+    type: 'classroom',
+    x: 1023,
+    y: 335,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'ps4',
+    name: 'Room PS-4',
+    type: 'classroom',
+    x: 879,
+    y: 580,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'ps5',
+    name: 'Room PS-5',
+    type: 'classroom',
+    x: 1025,
+    y: 581,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'node-235',
+    name: 'node-235',
+    type: 'waypoint',
+    x: 925,
+    y: 581,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'node-236',
+    name: 'node-236',
+    type: 'waypoint',
+    x: 976,
+    y: 581,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'node-237',
+    name: 'node-237',
+    type: 'waypoint',
+    x: 975,
+    y: 393,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'node-238',
+    name: 'node-238',
+    type: 'waypoint',
+    x: 1023,
+    y: 393,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'rooftop',
+    name: 'Rooftop',
+    type: 'classroom',
+    x: 929,
+    y: 367,
+    floor: 'fourth-preschoolMap',
+    view: 'fourth-preschool',
+    connectsToFloor: 'fourth-preschoolMap',
+    connectsToView: 'fourth-preschool'
+  },
+  {
+    id: 'ent-to-mainjhs',
+    name: 'Main to JHS',
+    type: 'stairs',
+    x: 640,
+    y: 161,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'ent-to-mainjhs-pair',
+    name: 'Main to JHS (from mainent)',
+    type: 'stairs',
+    x: 551,
+    y: 750,
+    floor: 'mainjhsMap',
+    view: 'mainjhs',
+    connectsToFloor: 'mainentMap',
+    connectsToView: 'mainent',
+    floorDirection: 'both'
+  },
+  {
+    id: 'node-300',
+    name: 'node-300',
+    type: 'waypoint',
+    x: 640,
+    y: 270,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'node-301',
+    name: 'node-301',
+    type: 'waypoint',
+    x: 257,
+    y: 271,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'node-302',
+    name: 'node-302',
+    type: 'waypoint',
+    x: 258,
+    y: 555,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'node-303',
+    name: 'node-303',
+    type: 'waypoint',
+    x: 162,
+    y: 555,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'node-304',
+    name: 'node-304',
+    type: 'waypoint',
+    x: 116,
+    y: 269,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'mainent-rect',
+    name: 'Main Entrance',
+    type: 'classroom',
+    x: 163,
+    y: 637,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs'
+  },
+  {
+    id: 'ent-to-shed',
+    name: 'Main to Shed',
+    type: 'stairs',
+    x: 74,
+    y: 269,
+    floor: 'mainentMap',
+    view: 'mainent',
+    connectsToFloor: 'shedMap',
+    connectsToView: 'shed'
+  },
+  {
+    id: 'ent-to-shed-pair',
+    name: 'Main to Shed (from mainent)',
+    type: 'stairs',
+    x: 1262,
+    y: 199,
+    floor: 'shedMap',
+    view: 'shed',
+    connectsToFloor: 'mainentMap',
+    connectsToView: 'mainent',
+    floorDirection: 'both'
+  },
+  {
+    id: 'node-305',
+    name: 'node-305',
+    type: 'waypoint',
+    x: 1119,
+    y: 199,
+    floor: 'shedMap',
+    view: 'shed',
+    connectsToFloor: 'shedMap',
+    connectsToView: 'shed'
+  },
+  {
+    id: 'node-306',
+    name: 'node-306',
+    type: 'waypoint',
+    x: 1119,
+    y: 470,
+    floor: 'shedMap',
+    view: 'shed',
+    connectsToFloor: 'shedMap',
+    connectsToView: 'shed'
+  },
+  {
+    id: 'node-307',
+    name: 'node-307',
+    type: 'waypoint',
+    x: 434,
+    y: 198,
+    floor: 'shedMap',
+    view: 'shed',
+    connectsToFloor: 'shedMap',
+    connectsToView: 'shed'
+  },
+  {
+    id: 'shed-shs',
+    name: 'shed-to-subshs',
+    type: 'stairs',
+    x: 434,
+    y: 60,
+    floor: 'shedMap',
+    view: 'shed',
+    connectsToFloor: 'second-subshsMap',
+    connectsToView: 'second-subshs'
+  },
+  {
+    id: 'shed-shs-pair',
+    name: 'shed-to-subshs (from shed)',
+    type: 'stairs',
+    x: 1045,
+    y: 721,
+    floor: 'second-subshsMap',
+    view: 'second-subshs',
+    connectsToFloor: 'shedMap',
+    connectsToView: 'shed',
+    floorDirection: 'both'
+  },
+  {
+    id: 'subshs-to-shsbldg',
+    name: 'subshs-to-shsbldg',
+    type: 'stairs',
+    x: 1111,
+    y: 95,
+    floor: 'subshsMap',
+    view: 'subshs',
+    connectsToFloor: 'shsbldgMap',
+    connectsToView: 'shsbldg'
+  },
+  {
+    id: 'subshs-to-shsbldg-pair',
+    name: 'subshs-to-shsbldg (from subshs)',
+    type: 'stairs',
+    x: 558,
+    y: 730,
+    floor: 'shsbldgMap',
+    view: 'shsbldg',
+    connectsToFloor: 'subshsMap',
+    connectsToView: 'subshs',
+    floorDirection: 'both'
+  },
+  {
+    id: 'node-308',
+    name: 'node-308',
+    type: 'waypoint',
+    x: 1020,
+    y: 92,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'preschoolMap',
+    connectsToView: 'preschool'
+  },
+  {
+    id: 'preschool-to-quadrangle',
+    name: 'groundjhs-to-preschool (from groundjhs)',
+    type: 'stairs',
+    x: 816,
+    y: 94,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'preschool-to-quadrangle-pair',
+    name: 'groundjhs-to-preschool (from groundjhs) (from preschool)',
+    type: 'stairs',
+    x: 932,
+    y: 647,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'preschoolMap',
+    connectsToView: 'preschool',
+    floorDirection: 'both'
+  },
+  {
+    id: 'firepump',
+    name: 'Fire Pump',
+    type: 'classroom',
+    x: 727,
+    y: 636,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'audio',
+    name: 'Audio Room',
+    type: 'classroom',
+    x: 524,
+    y: 639,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-309',
+    name: 'node-309',
+    type: 'waypoint',
+    x: 931,
+    y: 582,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-310',
+    name: 'node-310',
+    type: 'waypoint',
+    x: 726,
+    y: 583,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-311',
+    name: 'node-311',
+    type: 'waypoint',
+    x: 523,
+    y: 583,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-312',
+    name: 'node-312',
+    type: 'waypoint',
+    x: 519,
+    y: 467,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-313',
+    name: 'node-313',
+    type: 'waypoint',
+    x: 347,
+    y: 469,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-314',
+    name: 'node-314',
+    type: 'waypoint',
+    x: 347,
+    y: 706,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-315',
+    name: 'node-315',
+    type: 'waypoint',
+    x: 346,
+    y: 130,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'quadexit',
+    name: 'Quadrangle Exit',
+    type: 'classroom',
+    x: 346,
+    y: 79,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'node-317',
+    name: 'node-317',
+    type: 'waypoint',
+    x: 938,
+    y: 285,
+    floor: 'groundjhsMap',
+    view: 'groundjhs',
+    connectsToFloor: 'groundjhsMap',
+    connectsToView: 'groundjhs'
+  },
+  {
+    id: 'groundjhs-to-quadrangle',
+    name: 'groundjhs-to-quadrangle',
+    type: 'stairs',
+    x: 985,
+    y: 285,
+    floor: 'groundjhsMap',
+    view: 'groundjhs',
+    connectsToFloor: 'quadrangleMap',
+    connectsToView: 'quadrangle'
+  },
+  {
+    id: 'groundjhs-to-quadrangle-pair',
+    name: 'groundjhs-to-quadrangle (from groundjhs)',
+    type: 'stairs',
+    x: 305,
+    y: 469,
+    floor: 'quadrangleMap',
+    view: 'quadrangle',
+    connectsToFloor: 'groundjhsMap',
+    connectsToView: 'groundjhs',
+    floorDirection: 'both'
+  },
+  {
+    id: 'mainjhs-to-preschool',
+    name: 'mainjhs-to-preschool',
+    type: 'stairs',
+    x: 1462,
+    y: 349,
+    floor: 'mainjhsMap',
+    view: 'mainjhs',
+    connectsToFloor: 'preschoolMap',
+    connectsToView: 'preschool'
+  },
+  {
+    id: 'mainjhs-to-preschool-pair',
+    name: 'mainjhs-to-preschool (from mainjhs)',
+    type: 'stairs',
+    x: 1088,
+    y: 92,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'mainjhsMap',
+    connectsToView: 'mainjhs',
+    floorDirection: 'both'
   }
 ];
-
 // === CONNECTIONS ===
 const connections = [
   ['node-2', 'node-1'],
@@ -1962,8 +2896,6 @@ const connections = [
   ['node-137', 'node-138'],
   ['node-137', 'node-132'],
   ['node-137', 'node-130'],
-  
-  // SHS Building connections
   ['node-140', 'node-141'],
   ['node-141', 'shs-canteen'],
   ['shs-stairent', 'node-140'],
@@ -2000,13 +2932,96 @@ const connections = [
   ['node-180', 'shsrestB1'],
   ['shs-stairs1', 'shs-stairs1-pair'],
   ['node-175', 'shs-stairs1-pair'],
-  ['node-144', 'shs-stairs1']
-
-  // Sub-SHS Building
-  
+  ['node-144', 'shs-stairs1'],
+  ['subshs-stairs1', 'subshs-stairs1-pair'],
+  ['subshs-stairs2', 'subshs-stairs2-pair'],
+  ['subshs-stairs3', 'subshs-stairs3-pair'],
+  ['subshs-restroom', 'node-201'],
+  ['node-201', 'node-200'],
+  ['node-200', 'A1'],
+  ['node-200', 'node-202'],
+  ['node-202', 'node-203'],
+  ['subshs-stairs1', 'node-212'],
+  ['node-212', 'node-211'],
+  ['node-211', 'node-203'],
+  ['subshs-stairs1-pair', 'node-205'],
+  ['node-205', 'A3'],
+  ['node-205', 'node-204'],
+  ['A2', 'node-204'],
+  ['subshs-stairs1-pair', 'node-206'],
+  ['subshs-stairs2', 'node-206'],
+  ['subshs-stairs2-pair', 'node-209'],
+  ['subshs-stairs3', 'node-209'],
+  ['node-208', 'subshs-stairs2-pair'],
+  ['A5', 'node-208'],
+  ['node-208', 'node-207'],
+  ['node-207', 'A4'],
+  ['science-lab', 'node-210'],
+  ['subshs-stairs3-pair', 'node-210'],
+  ['preschool-stair1', 'preschool-stair1-pair'],
+  ['preschool-stair1-pair', 'playroom'],
+  ['preschool-stair1-pair', 'ps3'],
+  ['preschool-stair2', 'preschool-stair2-pair'],
+  ['preschool-stair1-pair', 'preschool-stair2'],
+  ['preschool-stair3', 'preschool-stair3-pair'],
+  ['preschool-stair2-pair', 'node-235'],
+  ['node-235', 'ps4'],
+  ['node-235', 'node-236'],
+  ['ps5', 'node-236'],
+  ['node-236', 'node-237'],
+  ['node-237', 'tutorial-room'],
+  ['node-237', 'node-238'],
+  ['node-238', 'sportsroom'],
+  ['node-238', 'preschool-stair3'],
+  ['rooftop', 'preschool-stair3-pair'],
+  ['node-232', 'node-233'],
+  ['node-233', 'node-234'],
+  ['ps2', 'node-234'],
+  ['ps1', 'node-233'],
+  ['preschool-stair1', 'node-231'],
+  ['node-232', 'node-231'],
+  ['node-230', 'node-231'],
+  ['shsfaculty', 'node-230'],
+  ['ent-to-mainjhs', 'ent-to-mainjhs-pair'],
+  ['ent-to-mainjhs-pair', 'node-1'],
+  ['node-300', 'ent-to-mainjhs'],
+  ['node-300', 'node-301'],
+  ['node-301', 'node-302'],
+  ['node-302', 'node-303'],
+  ['node-304', 'node-301'],
+  ['node-303', 'mainent-rect'],
+  ['ent-to-shed', 'ent-to-shed-pair'],
+  ['node-304', 'ent-to-shed'],
+  ['node-307', 'node-305'],
+  ['node-305', 'ent-to-shed-pair'],
+  ['node-306', 'node-305'],
+  ['shed-shs', 'shed-shs-pair'],
+  ['node-307', 'shed-shs'],
+  ['shed-shs-pair', 'subshs-stairs1-pair'],
+  ['subshs-to-shsbldg', 'subshs-to-shsbldg-pair'],
+  ['node-211', 'subshs-to-shsbldg'],
+  ['shs-stairent', 'subshs-to-shsbldg-pair'],
+  ['node-230', 'node-308'],
+  ['preschool-to-quadrangle', 'preschool-to-quadrangle-pair'],
+  ['node-308', 'preschool-to-quadrangle'],
+  ['node-315', 'node-313'],
+  ['node-313', 'node-312'],
+  ['node-314', 'node-313'],
+  ['node-312', 'node-311'],
+  ['node-311', 'audio'],
+  ['node-310', 'firepump'],
+  ['node-309', 'preschool-to-quadrangle-pair'],
+  ['node-310', 'node-309'],
+  ['node-310', 'node-311'],
+  ['node-315', 'quadexit'],
+  ['node-317', 'node-20'],
+  ['groundjhs-to-quadrangle', 'groundjhs-to-quadrangle-pair'],
+  ['groundjhs-to-quadrangle', 'node-317'],
+  ['groundjhs-to-quadrangle-pair', 'node-313'],
+  ['mainjhs-to-preschool', 'mainjhs-to-preschool-pair'],
+  ['node-8', 'mainjhs-to-preschool'],
+  ['node-308', 'mainjhs-to-preschool-pair']
 ];
-
-
 
 /*************************************************
  * GLOBAL STATE
@@ -2017,7 +3032,16 @@ let currentView = 'overall';
 let currentFloor = '';
 let currentPath = [];
 
-let zoomLevel = 1;
+// Mobile detection - used for better default zoom
+const isMobileOrTablet = () => {
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+    const isCoarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const isMobileUA = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isNarrowScreen = window.innerWidth <= 1024;
+    return isTouch && (isCoarsePointer || isMobileUA || isNarrowScreen);
+};
+
+let zoomLevel = isMobileOrTablet() ? 1.5 : 1; // Better default zoom for mobile
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
@@ -2951,11 +3975,19 @@ function attachUIEvents() {
 
 /*************************************************
  * MAP INTERACTION (pointer + inertia + pinch)
+ * Rewritten for reliable mobile UX:
+ *   - Multi-pointer tracking (no single pointerId limit)
+ *   - Proper pinch-to-zoom: ratio-based, zooms toward midpoint
+ *   - Single-finger pan cleanly separated from 2-finger pinch
+ *   - Inertia on pan release
+ *   - Double-tap to zoom (toggles 1x ↔ 2.5x at tap point)
+ *   - transform: translate3d(tx,ty,0) scale(Z), origin 0 0
+ *     → screen_pos = local_pos * Z + (tx, ty)  [clean math]
  *************************************************/
 function setupMapInteractions() {
     const mapWrapper = document.getElementById('mapWrapper');
 
-    // Keep click handling for location taps
+    // ── Click / tap on location elements ──────────────────────────────
     mapWrapper.addEventListener('click', (e) => {
         const clickable = e.target.closest('.location-rect, .campus-path, .location-path, .location-pathz');
         if (clickable) {
@@ -2963,133 +3995,186 @@ function setupMapInteractions() {
             e.preventDefault();
             const id = clickable.id;
             if (id) handleLocationClick(id);
-            return;
         }
     });
 
-    // Unified pointer-based dragging (works for mouse, touch, pen)
+    // ── Multi-pointer state ───────────────────────────────────────────
+    // Track all active pointers so we can distinguish pan (1 finger) from pinch (2 fingers)
+    const activePointers = new Map(); // pointerId → {x, y}
+
+    let panActive = false;     // true when panning with exactly 1 pointer
+    let pinchActive = false;   // true when pinching with exactly 2 pointers
+    let panStartX = 0;         // clientX at pan start minus translateX
+    let panStartY = 0;
+    let pinchStartDist = 0;    // pixel distance between two fingers at pinch start
+    let pinchStartZoom = 0;    // zoomLevel at pinch start
+    let pinchStartMidX = 0;    // midpoint of two fingers at pinch start (client coords)
+    let pinchStartMidY = 0;
+
+    // ── Helpers ───────────────────────────────────────────────────────
+    function getPointerPair() {
+        const ids = [...activePointers.keys()];
+        const p1 = activePointers.get(ids[0]);
+        const p2 = activePointers.get(ids[1]);
+        return { p1, p2 };
+    }
+
+    function beginPinch() {
+        panActive = false;
+        if (inertiaRaf) { cancelAnimationFrame(inertiaRaf); inertiaRaf = null; velocityX = velocityY = 0; }
+        const { p1, p2 } = getPointerPair();
+        pinchStartDist = Math.hypot(p2.x - p1.x, p2.y - p1.y) || 1;
+        pinchStartZoom = zoomLevel;
+        pinchStartMidX = (p1.x + p2.x) / 2;
+        pinchStartMidY = (p1.y + p2.y) / 2;
+        pinchActive = true;
+    }
+
+    function beginPan(px, py) {
+        pinchActive = false;
+        if (inertiaRaf) { cancelAnimationFrame(inertiaRaf); inertiaRaf = null; velocityX = velocityY = 0; }
+        panStartX = px - translateX;
+        panStartY = py - translateY;
+        lastPositions = [{ x: px, y: py, t: performance.now() }];
+        panActive = true;
+    }
+
+    // ── Pointer events ────────────────────────────────────────────────
     mapWrapper.addEventListener('pointerdown', e => {
-        // If the user clicked a UI control inside the map (floor-nav, directions nav, picker, buttons)
-        // we should NOT start a pan — allow the control to receive the event instead.
+        // Don't intercept taps on UI controls or clickable map elements
         const uiControl = e.target.closest('button, .floor-nav, .directions-floor-nav, .mobile-map-bar, .mobile-map-btn, .mobile-get-btn, .mobile-clear-btn, .floor-btn, .dir-nav-btn, .floor-nav-btn, .view-btn');
         if (uiControl) return;
-
         const clickable = e.target.closest('.location-rect, .campus-path, .location-path, .location-pathz');
         if (clickable) return;
 
-        // Grab pointer and start tracking
-        try { mapWrapper.setPointerCapture && mapWrapper.setPointerCapture(e.pointerId); } catch (err) {}
-        isPointerDown = true;
-        pointerId = e.pointerId;
-        lastPositions = [{ x: e.clientX, y: e.clientY, t: performance.now() }];
-        dragStartX = e.clientX - translateX;
-        dragStartY = e.clientY - translateY;
+        try { mapWrapper.setPointerCapture(e.pointerId); } catch (_) {}
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
         document.body.classList.add('no-select');
-        mapWrapper.classList.add('dragging');
 
-        // Cancel any inertia in progress
-        if (inertiaRaf) { cancelAnimationFrame(inertiaRaf); inertiaRaf = null; velocityX = velocityY = 0; }
+        if (activePointers.size === 1) {
+            beginPan(e.clientX, e.clientY);
+            mapWrapper.classList.add('dragging');
+        } else if (activePointers.size === 2) {
+            mapWrapper.classList.remove('dragging');
+            beginPinch();
+        }
+        // 3+ fingers: ignore
     });
 
-    document.addEventListener('pointermove', e => {
-        // always keep a recent hover/touch location (client coords) so zoom buttons can use cursor/tap
+    mapWrapper.addEventListener('pointermove', e => {
+        if (!activePointers.has(e.pointerId)) return;
+
+        // Update stored position
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
         lastHoverClientX = e.clientX;
         lastHoverClientY = e.clientY;
 
-        if (!isPointerDown || e.pointerId !== pointerId) return;
-        const now = performance.now();
-        const x = e.clientX;
-        const y = e.clientY;
+        if (activePointers.size === 1 && panActive) {
+            // Single-finger pan
+            const now = performance.now();
+            translateX = e.clientX - panStartX;
+            translateY = e.clientY - panStartY;
+            lastPositions.push({ x: e.clientX, y: e.clientY, t: now });
+            if (lastPositions.length > 8) lastPositions.shift();
+            scheduleUpdate();
 
-        // Update translate from drag
-        translateX = x - dragStartX;
-        translateY = y - dragStartY;
+        } else if (activePointers.size === 2 && pinchActive) {
+            // Two-finger pinch-to-zoom
+            const { p1, p2 } = getPointerPair();
+            const currentDist = Math.hypot(p2.x - p1.x, p2.y - p1.y) || 1;
+            const currentMidX = (p1.x + p2.x) / 2;
+            const currentMidY = (p1.y + p2.y) / 2;
 
-        // Record sample for velocity estimation
-        lastPositions.push({ x, y, t: now });
-        if (lastPositions.length > 6) lastPositions.shift();
+            // Ratio-based zoom so it feels proportional (not fixed step)
+            const newZoom = Math.min(Math.max(pinchStartZoom * (currentDist / pinchStartDist), 0.5), 4);
 
-        scheduleUpdate();
-    });
+            const mapWrapper2 = document.getElementById('mapWrapper');
+            const rect = mapWrapper2.getBoundingClientRect();
 
-    document.addEventListener('pointerup', e => {
-        if (!isPointerDown || e.pointerId !== pointerId) return;
-        isPointerDown = false;
-        pointerId = null;
-        document.body.classList.remove('no-select');
-        mapWrapper.classList.remove('dragging');
+            // Midpoint in wrapper-local coords
+            const midX = currentMidX - rect.left;
+            const midY = currentMidY - rect.top;
 
-        // Estimate velocity from samples
-        if (lastPositions.length >= 2) {
-            const a = lastPositions[0];
-            const b = lastPositions[lastPositions.length - 1];
-            const dt = (b.t - a.t) / 1000;
-            if (dt > 0) {
-                velocityX = (b.x - a.x) / dt;
-                velocityY = (b.y - a.y) / dt;
-                startInertia();
-            }
+            // Also pan with the midpoint movement (two-finger pan while pinching)
+            const dmx = currentMidX - pinchStartMidX;
+            const dmy = currentMidY - pinchStartMidY;
+
+            // Focal point: we compute what the map-local coordinate under the CURRENT midpoint is
+            // based on the STARTING zoom/translate, then reposition so that local point stays under midpoint
+            // We also incorporate the midpoint pan delta.
+            const pinchLocalX = (midX - dmx - translateX) / zoomLevel;
+            const pinchLocalY = (midY - dmy - translateY) / zoomLevel;
+
+            translateX = midX - pinchLocalX * newZoom;
+            translateY = midY - pinchLocalY * newZoom;
+            zoomLevel = newZoom;
+
+            document.getElementById('zoomLevel').textContent = `${Math.round(zoomLevel * 100)}%`;
+            scheduleUpdate();
         }
     });
 
-    // Wheel zoom for desktop (zoom towards cursor)
+    function endPointer(e) {
+        if (!activePointers.has(e.pointerId)) return;
+        activePointers.delete(e.pointerId);
+
+        if (activePointers.size === 0) {
+            // All fingers lifted — launch inertia if we were panning
+            mapWrapper.classList.remove('dragging');
+            document.body.classList.remove('no-select');
+            panActive = false;
+            pinchActive = false;
+            if (lastPositions.length >= 2) {
+                const a = lastPositions[0];
+                const b = lastPositions[lastPositions.length - 1];
+                const dt = (b.t - a.t) / 1000;
+                if (dt > 0 && dt < 0.2) {
+                    velocityX = (b.x - a.x) / dt;
+                    velocityY = (b.y - a.y) / dt;
+                    startInertia();
+                }
+            }
+        } else if (activePointers.size === 1) {
+            // Went from pinch to single finger — resume panning from current position
+            pinchActive = false;
+            const [remainingId] = activePointers.keys();
+            const rem = activePointers.get(remainingId);
+            beginPan(rem.x, rem.y);
+            mapWrapper.classList.add('dragging');
+        }
+    }
+
+    mapWrapper.addEventListener('pointerup', endPointer);
+    mapWrapper.addEventListener('pointercancel', endPointer);
+
+    // ── Wheel zoom (desktop) ──────────────────────────────────────────
     mapWrapper.addEventListener('wheel', e => {
         e.preventDefault();
-        changeZoom(e.deltaY < 0 ? 0.1 : -0.1, e.clientX, e.clientY);
+        const factor = e.deltaY < 0 ? 1.1 : 0.9;
+        setZoom(zoomLevel * factor, e.clientX, e.clientY);
     }, { passive: false });
 
-    // Maintain existing pinch-to-zoom for two-finger touch (better than relying on browser zoom)
-    let lastDistance = 0;
-    mapWrapper.addEventListener('touchstart', e => {
-        if (e.touches.length === 2) {
-            lastDistance = 0; // reset
-        }
-    }, { passive: true });
-
-    mapWrapper.addEventListener('touchmove', e => {
-        if (e.touches && e.touches.length === 2) {
-            e.preventDefault();
-            const t1 = e.touches[0];
-            const t2 = e.touches[1];
-            const distance = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-            if (lastDistance > 0) {
-                const delta = distance - lastDistance;
-                const centerX = (t1.clientX + t2.clientX) / 2;
-                const centerY = (t1.clientY + t2.clientY) / 2;
-                // keep hover point updated so UI (zoom buttons etc.) know latest focal point
-                lastHoverClientX = centerX;
-                lastHoverClientY = centerY;
-                changeZoom(delta > 0 ? 0.06 : -0.06, centerX, centerY);
-            }
-            lastDistance = distance;
-        } else if (e.touches && e.touches.length === 1) {
-            // track single-finger location for better mobile UX (used by double-tap / zoom buttons)
-            const t = e.touches[0];
-            lastHoverClientX = t.clientX;
-            lastHoverClientY = t.clientY;
-        }
-    }, { passive: false });
-
-    mapWrapper.addEventListener('touchend', () => {
-        lastDistance = 0;
-    }, { passive: true });
-
-    // Double-tap to zoom (mobile friendly)
+    // ── Double-tap to zoom (mobile) ────────────────────────────────────
     let lastTap = 0;
-    mapWrapper.addEventListener('touchstart', e => {
+    let lastTapX = 0;
+    let lastTapY = 0;
+    mapWrapper.addEventListener('pointerdown', e => {
+        // Only track taps (single finger, quick)
+        if (activePointers.size > 1) return;
         const now = Date.now();
-        const tapInterval = now - lastTap;
-        lastTap = now;
-        if (tapInterval > 0 && tapInterval < 300) {
-            // double-tap detected -> toggle zoom between 1 and 2 around tap point
-            const touch = e.touches && e.touches[0];
-            const cx = touch ? touch.clientX : undefined;
-            const cy = touch ? touch.clientY : undefined;
-            const target = (zoomLevel > 1.4) ? 1 : Math.min(2, zoomLevel * 2);
-            e.preventDefault(); // prevent browser's double-tap zoom
-            setZoom(target, cx, cy);
+        const gap = now - lastTap;
+        if (gap > 0 && gap < 300 && Math.hypot(e.clientX - lastTapX, e.clientY - lastTapY) < 40) {
+            // Double-tap: toggle between fitted and 2.5× zoom
+            e.preventDefault();
+            const target = zoomLevel < 1.8 ? 2.5 : 1;
+            setZoom(target, e.clientX, e.clientY);
+            lastTap = 0; // reset to avoid triple-tap firing again
+            return;
         }
-    }, { passive: false });
+        lastTap = now;
+        lastTapX = e.clientX;
+        lastTapY = e.clientY;
+    });
 }
 
 // Schedule an rAF update (coalesces frequent events)
@@ -3102,12 +4187,13 @@ function scheduleUpdate() {
     });
 }
 
-// Apply current transform using GPU-friendly scale then translate (keeps math consistent with focal zoom)
+// Apply current transform: translate(tx,ty) scale(Z) with transform-origin:0 0
+// This means: screen_pos = local_pos * Z + (tx, ty)
+// So: tx/ty are screen-space offsets of the map origin. Math is clean and consistent.
 function applyTransform() {
     const map = document.querySelector('.floor-map.active');
     if (map) {
-        // Apply scale first, then translate so translateX/Y represent screen-space offsets
-        map.style.transform = `scale(${zoomLevel}) translate3d(${translateX}px, ${translateY}px, 0)`;
+        map.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${zoomLevel})`;
     }
 }
 
@@ -3274,6 +4360,7 @@ function switchView(view) {
     
     currentView = view;
     updateFloorSelector(view);
+    // Reset zoom when switching views (different building/area)
     resetMapTransform();
     // keep mobile UI in sync
     updateMobileMapLabel(view);
@@ -3518,6 +4605,7 @@ function navigateRouteFloor(delta) {
 
 function switchFloor(floorMapId, options = {}) {
     // options: { preserveTransform: boolean }
+    // Default is now to preserve transform (zoom persists when changing floors)
     if (!floorMapId) return;
     
     document.querySelectorAll('.floor-map').forEach(map => {
@@ -3533,7 +4621,8 @@ function switchFloor(floorMapId, options = {}) {
     if (selectedFloor) {
         selectedFloor.classList.add('active');
         currentFloor = floorMapId;
-        if (!options.preserveTransform) {
+        // Preserve transform by default - only reset if explicitly told not to
+        if (options.preserveTransform === false) {
             resetMapTransform();
         }
         updateMapHighlights();
@@ -3559,12 +4648,8 @@ function setZoom(newZoom, clientX, clientY) {
         clientY = rect.top + rect.height / 2;
     }
 
-    // Coordinates relative to wrapper top-left
-    const cx = clientX - rect.left;
-    const cy = clientY - rect.top;
-
     const oldZoom = zoomLevel;
-    newZoom = Math.min(Math.max(newZoom, 0.5), 3);
+    newZoom = Math.min(Math.max(newZoom, 0.5), 4);
 
     if (oldZoom === 0) {
         zoomLevel = newZoom;
@@ -3573,12 +4658,17 @@ function setZoom(newZoom, clientX, clientY) {
         return;
     }
 
-    // Compute focal point in map-local space, then set translate so the focal screen point stays fixed
-    // mapLocal = (screenPoint - translate) / oldZoom
+    // With transform: translate3d(tx,ty,0) scale(Z), transform-origin:0 0:
+    //   screen_pos = local_pos * Z + (tx, ty)
+    //   local_focal = (client - rect.offset - tx) / oldZ
+    //   newTx = (client - rect.offset) - local_focal * newZ
+    const cx = clientX - rect.left;
+    const cy = clientY - rect.top;
+
     const localX = (cx - translateX) / oldZoom;
     const localY = (cy - translateY) / oldZoom;
 
-    // new translate so that: cx = newTranslate + newZoom * localX
+    // new translate so focal screen point stays fixed
     translateX = cx - newZoom * localX;
     translateY = cy - newZoom * localY;
 
@@ -3597,7 +4687,8 @@ function updateMapTransform() {
 }
 
 function resetMapTransform() {
-    zoomLevel = 1;
+    // Reset zoom based on device type
+    zoomLevel = isMobileOrTablet() ? 2.0 : 1;
     translateX = 0;
     translateY = 0;
 
@@ -3607,11 +4698,11 @@ function resetMapTransform() {
 
     const activeMap = document.querySelector('.floor-map.active');
     if (activeMap) {
-        // Keep same transform order as applyTransform: scale then translate
-        activeMap.style.transform = 'scale(1) translate3d(0px, 0px, 0)';
+        // Keep same transform order as applyTransform: translate then scale
+        activeMap.style.transform = `translate3d(0px, 0px, 0) scale(${zoomLevel})`;
     }
 
-    document.getElementById('zoomLevel').textContent = '100%';
+    document.getElementById('zoomLevel').textContent = `${Math.round(zoomLevel * 100)}%`;
 } 
 
 /*************************************************
