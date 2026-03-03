@@ -1187,7 +1187,7 @@
             white-space: nowrap;
         }
 
-        /* Directions-specific floor nav (visible only when a route spans multiple floors) */
+        /* Directions-specific floor nav (visible whenever a route is active) */
         .directions-floor-nav {
             position: absolute;
             bottom: 16px;
@@ -1199,8 +1199,9 @@
             gap: 8px;
             padding: 8px 10px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-            z-index: 1003; /* above mobile bar (~1002), below sidebar */
+            z-index: 1003;
             transition: transform 0.12s ease, opacity 0.12s ease;
+            min-width: 220px;
         }
 
         /* On desktop keep the directions nav near the main floor nav (top-right) so it doesn't get lost at bottom */
@@ -1231,13 +1232,31 @@
         .dir-nav-btn:disabled { opacity: 0.35; cursor: default; }
 
         .dir-floor-label {
-            font-weight: 700;
+            font-weight: 600;
             color: #0b1220;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             min-width: 160px;
             max-width: 260px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
             white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .dir-nav-map-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #1976d2;
+        }
+
+        .dir-nav-map-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #0b1220;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -1276,7 +1295,7 @@
             }
         }
 
-    /* Mobile picker modal - default hidden on desktop */
+    /* Mobile picker modal - completely removed from document flow, never visible on desktop */
     .mobile-modal {
         position: fixed;
         inset: 0;
@@ -1284,17 +1303,24 @@
         align-items: center;
         justify-content: center;
         background: rgba(0,0,0,0.45);
-        z-index: 1003;
+        z-index: 9999;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
 
     /* Strong hidden rule to avoid accidental showing */
     .mobile-modal.hidden {
         display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
     }
 
-    /* Allow modal to show on both mobile and desktop when explicitly opened */
-    .mobile-modal:not(.hidden) {
-        display: flex !important;
+    /* Allow modal to show only on mobile when explicitly opened */
+    @media (max-width: 768px) {
+        .mobile-modal:not(.hidden) {
+            display: flex !important;
+        }
     }
 
     /* Show mobile UI only on small screens when not .hidden */
@@ -1302,8 +1328,6 @@
         .mobile-map-bar:not(.hidden) {
             display: flex;
         }
-
-
     }
 
     .mobile-modal-inner {
@@ -1345,7 +1369,6 @@
         .mobile-modal-inner,
         #mobileMapBar,
         #mobileClearRouteBtn,
-        #clearRoute,
         .mobile-clear-btn {
             display: none !important;
             visibility: hidden !important;
@@ -1363,7 +1386,6 @@
         .mobile-modal-inner,
         #mobileMapBar,
         #mobileClearRouteBtn,
-        #clearRoute,
         .mobile-clear-btn {
             display: none !important;
             visibility: hidden !important;

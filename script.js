@@ -3064,6 +3064,7 @@ let pathAnimCounter = 0; // unique id for animated paths
 // Navigation helpers for multi-floor directions
 let currentRouteFloors = [];
 let currentRouteFloorIndex = 0;
+let currentRouteSegments = []; // { floorId, view, label } per map segment
 
 // Build graph for pathfinding
 const graph = {};
@@ -3458,6 +3459,19 @@ function drawPathMarker(loc, floorId, isStart, isEnd) {
     pathLayer.appendChild(circle);
 }
 
+function clearSelections() {
+    selectedStart = '';
+    selectedDestination = '';
+    const startEl = document.getElementById('startLocation');
+    const destEl = document.getElementById('destination');
+    if (startEl) { startEl.value = ''; startEl.dataset.id = ''; }
+    if (destEl) { destEl.value = ''; destEl.dataset.id = ''; }
+    clearPathFromMaps();
+    hideDirectionsFloorNav();
+    document.getElementById('infoPanel').classList.add('hidden');
+    updateMapHighlights();
+}
+
 function clearPathFromMaps() {
     // Remove path drawings
     document.querySelectorAll('.path-layer').forEach(layer => layer.remove());
@@ -3713,7 +3727,7 @@ function initMobilePicker() {
     });
 
     const mobileClear = document.getElementById('mobileClearRouteBtn');
-    if (mobileClear) mobileClear.addEventListener('click', () => { clearPathFromMaps(); hideDirectionsFloorNav(); document.getElementById('infoPanel').classList.add('hidden'); });
+    if (mobileClear) mobileClear.addEventListener('click', clearSelections);
 
     // Show mobile UI only for touch-capable small devices
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -3938,7 +3952,7 @@ function attachUIEvents() {
     
     document.getElementById('getDirections').addEventListener('click', handleGetDirections);
     const clearBtn = document.getElementById('clearRoute');
-    if (clearBtn) clearBtn.addEventListener('click', () => { clearPathFromMaps(); hideDirectionsFloorNav(); document.getElementById('infoPanel').classList.add('hidden'); });
+    if (clearBtn) clearBtn.addEventListener('click', clearSelections);
 
     // (toolbar Clear removed) sidebar Clear is primary for desktop too — no duplicate toolbar control needed.
     
@@ -3970,7 +3984,11 @@ function attachUIEvents() {
         const cy = hoverInside ? lastHoverClientY : (rect.top + rect.height/2);
         changeZoom(-0.1, cx, cy);
     });
-    document.getElementById('resetView').addEventListener('click', resetMapTransform);
+    document.getElementById('resetView').addEventListener('click', () => {
+        resetMapTransform();
+        // Also clear start/destination selections
+        clearSelections();
+    });
 }
 
 /*************************************************
@@ -3988,7 +4006,11 @@ function setupMapInteractions() {
     const mapWrapper = document.getElementById('mapWrapper');
 
     // ── Click / tap on location elements ──────────────────────────────
+    // NOTE: tap-on-location is handled in endPointer via tap detection.
+    // This click handler is kept only as a fallback for mouse clicks (desktop).
     mapWrapper.addEventListener('click', (e) => {
+        // Skip if pointer event system already handled it (touch)
+        if (e.pointerType === 'touch') return;
         const clickable = e.target.closest('.location-rect, .campus-path, .location-path, .location-pathz');
         if (clickable) {
             e.stopPropagation();
@@ -4043,16 +4065,20 @@ function setupMapInteractions() {
         panActive = true;
     }
 
+    // Track tap start position per pointer so we can distinguish tap vs drag
+    const pointerDownPos = new Map(); // pointerId → {x, y, target}
+    const TAP_MOVE_THRESHOLD = 8; // px — moves smaller than this are treated as taps
+
     // ── Pointer events ────────────────────────────────────────────────
     mapWrapper.addEventListener('pointerdown', e => {
-        // Don't intercept taps on UI controls or clickable map elements
+        // Don't intercept taps on UI controls
         const uiControl = e.target.closest('button, .floor-nav, .directions-floor-nav, .mobile-map-bar, .mobile-map-btn, .mobile-get-btn, .mobile-clear-btn, .floor-btn, .dir-nav-btn, .floor-nav-btn, .view-btn');
         if (uiControl) return;
-        const clickable = e.target.closest('.location-rect, .campus-path, .location-path, .location-pathz');
-        if (clickable) return;
 
+        // Always capture pointer — even over clickable map elements — so pinch/pan works everywhere
         try { mapWrapper.setPointerCapture(e.pointerId); } catch (_) {}
         activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        pointerDownPos.set(e.pointerId, { x: e.clientX, y: e.clientY, target: e.target });
         document.body.classList.add('no-select');
 
         if (activePointers.size === 1) {
@@ -4114,10 +4140,16 @@ function setupMapInteractions() {
 
     function endPointer(e) {
         if (!activePointers.has(e.pointerId)) return;
+
+        // Tap detection: check if this finger moved less than threshold
+        const downPos = pointerDownPos.get(e.pointerId);
+        const wasTap = downPos && activePointers.size === 1 &&
+            Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) < TAP_MOVE_THRESHOLD;
+
         activePointers.delete(e.pointerId);
+        pointerDownPos.delete(e.pointerId);
 
         if (activePointers.size === 0) {
-            // All fingers lifted — stop immediately, no inertia/momentum
             mapWrapper.classList.remove('dragging');
             document.body.classList.remove('no-select');
             panActive = false;
@@ -4125,6 +4157,14 @@ function setupMapInteractions() {
             // Cancel any leftover inertia animation
             if (inertiaRaf) { cancelAnimationFrame(inertiaRaf); inertiaRaf = null; }
             velocityX = velocityY = 0;
+
+            // Fire location click only if it was a real tap (not a drag)
+            if (wasTap && downPos) {
+                const clickable = downPos.target.closest('.location-rect, .campus-path, .location-path, .location-pathz');
+                if (clickable && clickable.id) {
+                    handleLocationClick(clickable.id);
+                }
+            }
         } else if (activePointers.size === 1) {
             // Went from pinch to single finger — resume panning from current position
             pinchActive = false;
@@ -4273,14 +4313,11 @@ function handleGetDirections() {
             setTimeout(() => {
                 drawPathOnMap(path);
                 displayRouteInfo(getLocationName(selectedStart), getLocationName(selectedDestination), directions);
-                // Show directions floor navigation if route crosses multiple floors
+                // Always show directions nav so user can see map count
                 const routeFloors = getRouteFloorsFromPath(path);
-                if (routeFloors.length > 1) {
-                    const startIdx = Math.max(0, routeFloors.indexOf(startLoc ? startLoc.floor : ''));
-                    showDirectionsFloorNav(routeFloors, startIdx);
-                } else {
-                    hideDirectionsFloorNav();
-                }
+                const routeSegments = getRouteSegmentsFromPath(path);
+                const startIdx = Math.max(0, routeFloors.indexOf(startLoc ? startLoc.floor : ''));
+                showDirectionsFloorNav(routeFloors, startIdx, routeSegments);
             }, 100);
         } else {
             // Switch to the start floor
@@ -4291,14 +4328,11 @@ function handleGetDirections() {
             }
             drawPathOnMap(path);
             displayRouteInfo(getLocationName(selectedStart), getLocationName(selectedDestination), directions);
-            // Show directions floor navigation if route crosses multiple floors
+            // Always show directions nav
             const routeFloors = getRouteFloorsFromPath(path);
-            if (routeFloors.length > 1) {
-                const startIdx = Math.max(0, routeFloors.indexOf(startLoc ? startLoc.floor : ''));
-                showDirectionsFloorNav(routeFloors, startIdx);
-            } else {
-                hideDirectionsFloorNav();
-            }
+            const routeSegments = getRouteSegmentsFromPath(path);
+            const startIdx = Math.max(0, routeFloors.indexOf(startLoc ? startLoc.floor : ''));
+            showDirectionsFloorNav(routeFloors, startIdx, routeSegments);
         }
     } else {
         alert('No route found between these locations.');
@@ -4523,9 +4557,34 @@ function getRouteFloorsFromPath(path) {
     return floors;
 }
 
-function showDirectionsFloorNav(floors, initialIndex = 0) {
+// Returns array of { floorId, view, label } segments for the direction nav
+function getRouteSegmentsFromPath(path) {
+    const segments = [];
+    path.forEach(id => {
+        const loc = locations.find(l => l.id === id);
+        if (!loc || !loc.floor) return;
+        const last = segments[segments.length - 1];
+        if (!last || last.floorId !== loc.floor) {
+            // Build a readable label
+            const viewFloors = floorMap[loc.view] || [];
+            const floorInfo = viewFloors.find(f => f.id === loc.floor);
+            const floorName = floorInfo ? floorInfo.name : '';
+            // View label from button text
+            const viewBtn = document.querySelector(`.view-btn[data-view="${loc.view}"]`);
+            const viewLabel = viewBtn ? viewBtn.textContent.trim() : loc.view;
+            const label = viewFloors.length > 1 && floorName
+                ? `${viewLabel} — ${floorName}`
+                : viewLabel;
+            segments.push({ floorId: loc.floor, view: loc.view, label });
+        }
+    });
+    return segments;
+}
+
+function showDirectionsFloorNav(floors, initialIndex = 0, segments = null) {
     currentRouteFloors = floors.slice();
     currentRouteFloorIndex = Math.min(Math.max(initialIndex, 0), currentRouteFloors.length - 1);
+    currentRouteSegments = segments ? segments.slice() : [];
     const nav = document.getElementById('directionsFloorNav');
     if (!nav) return;
 
@@ -4546,11 +4605,11 @@ function showDirectionsFloorNav(floors, initialIndex = 0) {
 function hideDirectionsFloorNav() {
     currentRouteFloors = [];
     currentRouteFloorIndex = 0;
+    currentRouteSegments = [];
     const nav = document.getElementById('directionsFloorNav');
     if (!nav) return;
     nav.classList.add('hidden');
     nav.setAttribute('aria-hidden', 'true');
-    // reset any inline bottom offset we applied when mobile bar was visible
     nav.style.bottom = '';
 }
 
@@ -4565,17 +4624,27 @@ function updateDirectionsFloorNavState() {
         next.disabled = true;
         return;
     }
-    // Sync index with the current floor if user changed floor manually
+
+    // Sync index with current floor
     const foundIdx = currentRouteFloors.indexOf(currentFloor);
     if (foundIdx !== -1) currentRouteFloorIndex = foundIdx;
 
     const idx = currentRouteFloorIndex;
-    const floorId = currentRouteFloors[idx];
-    const floor = (floorMap[currentView] || []).find(f => f.id === floorId);
-    const name = floor ? floor.name : floorId;
-    label.textContent = `${name} (${idx + 1}/${currentRouteFloors.length})`;
+    const total = currentRouteFloors.length;
+
+    // Use segment label if available, otherwise fall back to floor name
+    let name = '';
+    if (currentRouteSegments && currentRouteSegments[idx]) {
+        name = currentRouteSegments[idx].label;
+    } else {
+        const floorId = currentRouteFloors[idx];
+        const floor = (floorMap[currentView] || []).find(f => f.id === floorId);
+        name = floor ? floor.name : floorId;
+    }
+
+    label.innerHTML = `<span class="dir-nav-map-label">Map ${idx + 1}/${total}</span><span class="dir-nav-map-name">${name}</span>`;
     prev.disabled = idx === 0;
-    next.disabled = idx === currentRouteFloors.length - 1;
+    next.disabled = idx === total - 1;
 }
 
 function navigateRouteFloor(delta) {
@@ -4584,12 +4653,34 @@ function navigateRouteFloor(delta) {
     if (idx < 0) idx = 0;
     if (idx >= currentRouteFloors.length) idx = currentRouteFloors.length - 1;
     currentRouteFloorIndex = idx;
+
     const floorId = currentRouteFloors[currentRouteFloorIndex];
     if (!floorId) return;
+
+    // Also switch view if the segment has a different view
+    const seg = currentRouteSegments && currentRouteSegments[idx];
+    if (seg && seg.view && seg.view !== currentView) {
+        // Switch view without resetting zoom
+        document.querySelectorAll('.floor-map').forEach(map => {
+            map.style.transform = '';
+            map.classList.remove('active');
+        });
+        const newMap = document.getElementById(seg.view + 'Map');
+        if (newMap) newMap.classList.add('active');
+        document.querySelectorAll('.view-btn').forEach(btn =>
+            btn.classList.toggle('active', btn.dataset.view === seg.view)
+        );
+        currentView = seg.view;
+        updateMobileMapLabel(seg.view);
+        // Redraw path on the new view
+        setTimeout(() => {
+            if (currentPath.length > 0) drawPathOnMap(currentPath);
+        }, 50);
+    }
+
     currentFloor = floorId;
     switchFloor(currentFloor, { preserveTransform: true });
     updateDirectionsFloorNavState();
-    // keep the floating floor nav (desktop) visible when navigating route floors
     updateFloorNavVisibility();
 }
 
