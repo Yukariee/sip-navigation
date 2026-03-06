@@ -1500,8 +1500,8 @@ const locations = [
     id: 'shs-stairs2',
     name: 'shs stair 2',
     type: 'stairs',
-    x: 724,
-    y: 619,
+    x: 697,
+    y: 707,
     floor: 'second-shsbldgMap',
     view: 'second-shsbldg',
     connectsToFloor: 'third-shsbldgMap',
@@ -1795,8 +1795,8 @@ const locations = [
     id: 'shs-stairs1-pair',
     name: 'shs stair 1 (from shsbldg) (from shsbldg)',
     type: 'stairs',
-    x: 697,
-    y: 707,
+    x: 724,
+    y: 619,
     floor: 'second-shsbldgMap',
     view: 'second-shsbldg',
     connectsToFloor: 'shsbldgMap',
@@ -2922,7 +2922,7 @@ const connections = [
   ['node-162', 'shs-stairs3-pair'],
   ['node-177', 'node-175'],
   ['node-177', 'node-178'],
-  ['shs-stairs2', 'node-177'],
+  ['shs-stairs2', 'node-175'],
   ['node-178', 'A6'],
   ['node-179', 'A7'],
   ['node-178', 'node-179'],
@@ -2931,7 +2931,7 @@ const connections = [
   ['node-181', 'shsrestG1'],
   ['node-180', 'shsrestB1'],
   ['shs-stairs1', 'shs-stairs1-pair'],
-  ['node-175', 'shs-stairs1-pair'],
+  ['node-177', 'shs-stairs1-pair'],
   ['node-144', 'shs-stairs1'],
   ['subshs-stairs1', 'subshs-stairs1-pair'],
   ['subshs-stairs2', 'subshs-stairs2-pair'],
@@ -3065,6 +3065,7 @@ let pathAnimCounter = 0; // unique id for animated paths
 let currentRouteFloors = [];
 let currentRouteFloorIndex = 0;
 let currentRouteSegments = []; // { floorId, view, label } per map segment
+let emergencyMode = false; // when true, emergency exits are included in routing
 
 // Build graph for pathfinding
 const graph = {};
@@ -3081,25 +3082,35 @@ connections.forEach(([a, b]) => {
  *************************************************/
 function findPath(startId, endId) {
     if (startId === endId) return [startId];
-    
+
+    // Build a filtered neighbor lookup: exclude emergency nodes unless emergencyMode is on
+    function getNeighbors(nodeId) {
+        return (graph[nodeId] || []).filter(neighborId => {
+            const neighbor = locations.find(l => l.id === neighborId);
+            if (!neighbor) return false;
+            // Block emergency nodes when emergency mode is OFF
+            if (neighbor.type === 'emergency' && !emergencyMode) return false;
+            return true;
+        });
+    }
+
     const queue = [[startId]];
     const visited = new Set([startId]);
-    
+
     while (queue.length > 0) {
         const path = queue.shift();
         const node = path[path.length - 1];
-        
+
         if (node === endId) return path;
-        
-        const neighbors = graph[node] || [];
-        for (const neighbor of neighbors) {
+
+        for (const neighbor of getNeighbors(node)) {
             if (!visited.has(neighbor)) {
                 visited.add(neighbor);
                 queue.push([...path, neighbor]);
             }
         }
     }
-    
+
     return null;
 }
 
@@ -3457,6 +3468,39 @@ function drawPathMarker(loc, floorId, isStart, isEnd) {
     circle.setAttribute('stroke-width', '2');
     
     pathLayer.appendChild(circle);
+}
+
+/*************************************************
+ * EMERGENCY MODE
+ *************************************************/
+function toggleEmergencyMode() {
+    emergencyMode = !emergencyMode;
+
+    const btn = document.getElementById('emergencyModeBtn');
+    const banner = document.getElementById('emergencyBanner');
+
+    if (emergencyMode) {
+        btn.classList.add('emergency-active');
+        btn.setAttribute('aria-pressed', 'true');
+        if (banner) {
+            banner.classList.remove('hidden');
+            banner.setAttribute('aria-hidden', 'false');
+        }
+        // Filter location dropdowns to only show emergency exits as destination options
+        // (pathfinding will automatically route through them)
+    } else {
+        btn.classList.remove('emergency-active');
+        btn.setAttribute('aria-pressed', 'false');
+        if (banner) {
+            banner.classList.add('hidden');
+            banner.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    // Clear any existing route since the routing graph has changed
+    clearSelections();
+    // Refresh dropdown to show/hide emergency exits
+    refreshDropdowns();
 }
 
 function clearSelections() {
@@ -3830,7 +3874,14 @@ function populateDropdowns() {
     const destSelect = document.getElementById('destination');
     
     // Only show non-hidden locations, exclude waypoints, stairs, and backstairs
-    const visibleLocations = locations.filter(loc => !loc.hidden && loc.type !== 'waypoint' && loc.type !== 'stairs' && !loc.id.includes('backstairs'));
+    // Emergency exits are also hidden unless emergency mode is on
+    const visibleLocations = locations.filter(loc =>
+        !loc.hidden &&
+        loc.type !== 'waypoint' &&
+        loc.type !== 'stairs' &&
+        !loc.id.includes('backstairs') &&
+        (loc.type !== 'emergency' || emergencyMode)
+    );
     
     // Store all visible locations for search functionality
     window.allVisibleLocations = visibleLocations;
@@ -3839,6 +3890,15 @@ function populateDropdowns() {
         startSelect.appendChild(createOption(location));
         destSelect.appendChild(createOption(location));
     });
+}
+
+// Refresh dropdowns after emergency mode toggle
+function refreshDropdowns() {
+    populateDropdowns();
+    const startList = document.getElementById('startLocationList');
+    const destList = document.getElementById('destinationList');
+    if (startList) populateDropdownList(document.getElementById('startLocation'), startList);
+    if (destList) populateDropdownList(document.getElementById('destination'), destList);
 }
 
 function createOption(location) {
@@ -3989,6 +4049,12 @@ function attachUIEvents() {
         // Also clear start/destination selections
         clearSelections();
     });
+
+    // Emergency mode toggle
+    const emergencyBtn = document.getElementById('emergencyModeBtn');
+    if (emergencyBtn) {
+        emergencyBtn.addEventListener('click', toggleEmergencyMode);
+    }
 }
 
 /*************************************************

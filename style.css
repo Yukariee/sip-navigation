@@ -536,6 +536,99 @@
     }
 
 /*************************************************
+ * EMERGENCY MODE
+ *************************************************/
+    .emergency-mode-btn {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        color: #f9fafb;
+        border: 2px solid #374151;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        letter-spacing: 0.01em;
+    }
+
+    .emergency-mode-btn:hover {
+        background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+        border-color: #dc2626;
+        color: #fef2f2;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+    }
+
+    /* Active / ON state — pulsing red */
+    .emergency-mode-btn.emergency-active {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        border-color: #ef4444;
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(220, 38, 38, 0.45), 0 2px 6px rgba(0,0,0,0.2);
+        animation: emergency-pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes emergency-pulse {
+        0%, 100% { box-shadow: 0 4px 16px rgba(220, 38, 38, 0.45), 0 2px 6px rgba(0,0,0,0.2); }
+        50%       { box-shadow: 0 4px 28px rgba(220, 38, 38, 0.75), 0 2px 8px rgba(0,0,0,0.25); }
+    }
+
+    .emergency-icon { font-size: 1.1rem; }
+
+    /* Compact on mobile — hide text label */
+    @media (max-width: 768px) {
+        .emergency-label { display: none; }
+        .emergency-mode-btn { padding: 10px 12px; }
+    }
+
+    /* Emergency banner — full-width strip below toolbar */
+    .emergency-banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+        color: #fef2f2;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-bottom: 2px solid #dc2626;
+        animation: banner-slide-in 0.3s ease;
+        position: relative;
+        z-index: 10;
+    }
+
+    .emergency-banner.hidden { display: none !important; }
+
+    @keyframes banner-slide-in {
+        from { transform: translateY(-100%); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .emergency-banner-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+    .emergency-banner span:not(.emergency-banner-icon) { flex: 1; }
+
+    .emergency-banner-dismiss {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: #fef2f2;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+    }
+
+    .emergency-banner-dismiss:hover { background: rgba(255,255,255,0.25); }
+
+/*************************************************
  * FLOOR SELECTOR
  * Floor selection for multi-floor buildings
  *************************************************/
