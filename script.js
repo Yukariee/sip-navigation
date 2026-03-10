@@ -2739,6 +2739,140 @@ const locations = [
     connectsToFloor: 'mainjhsMap',
     connectsToView: 'mainjhs',
     floorDirection: 'both'
+  },
+  {
+    id: 'preschool-emer1',
+    name: 'Emergency Exit | Quadrangle',
+    type: 'emergency',
+    x: 874,
+    y: 712,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'preschool-emer1-pair',
+    name: 'Emergency Exit | Quadrangle (from preschool)',
+    type: 'emergency',
+    x: 882,
+    y: 697,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'preschoolMap',
+    connectsToView: 'preschool',
+    floorDirection: 'both'
+  },
+  {
+    id: 'node-350',
+    name: 'node-350',
+    type: 'waypoint',
+    x: 1024,
+    y: 687,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-351',
+    name: 'node-351',
+    type: 'waypoint',
+    x: 915,
+    y: 713,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-352',
+    name: 'node-352',
+    type: 'waypoint',
+    x: 986,
+    y: 714,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'node-353',
+    name: 'node-353',
+    type: 'waypoint',
+    x: 985,
+    y: 687,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool'
+  },
+  {
+    id: 'preschool-emer2',
+    name: 'Emergency Exit | Quadrangle',
+    type: 'emergency',
+    x: 880,
+    y: 665,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool'
+  },
+  {
+    id: 'preschool-emer2-pair',
+    name: 'Emergency Exit | Quadrangle (from second-preschool)',
+    type: 'emergency',
+    x: 977,
+    y: 709,
+    floor: 'third-preschoolMap',
+    view: 'third-preschool',
+    connectsToFloor: 'second-preschoolMap',
+    connectsToView: 'second-preschool',
+    floorDirection: 'both'
+  },
+  {
+    id: 'node-354',
+    name: 'node-354',
+    type: 'waypoint',
+    x: 805,
+    y: 665,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool'
+  },
+  {
+    id: 'node-355',
+    name: 'node-355',
+    type: 'waypoint',
+    x: 805,
+    y: 697,
+    floor: 'second-preschoolMap',
+    view: 'second-preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool'
+  },
+  {
+    id: 'node-356',
+    name: 'node-356',
+    type: 'waypoint',
+    x: 1062,
+    y: 686,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool'
+  },
+  {
+    id: 'preschool-exit',
+    name: 'Pre-School Entrance/Exit',
+    type: 'entrance',
+    x: 1062,
+    y: 730,
+    floor: 'preschoolMap',
+    view: 'preschool',
+    connectsToFloor: 'third-preschoolMap',
+    connectsToView: 'third-preschool'
   }
 ];
 // === CONNECTIONS ===
@@ -3020,7 +3154,20 @@ const connections = [
   ['groundjhs-to-quadrangle-pair', 'node-313'],
   ['mainjhs-to-preschool', 'mainjhs-to-preschool-pair'],
   ['node-8', 'mainjhs-to-preschool'],
-  ['node-308', 'mainjhs-to-preschool-pair']
+  ['node-308', 'mainjhs-to-preschool-pair'],
+  ['preschool-emer1', 'preschool-emer1-pair'],
+  ['preschool-emer2', 'preschool-emer2-pair'],
+  ['node-236', 'preschool-emer2-pair'],
+  ['preschool-emer2', 'node-354'],
+  ['node-354', 'node-355'],
+  ['node-355', 'preschool-emer1-pair'],
+  ['preschool-emer1', 'node-351'],
+  ['node-351', 'node-352'],
+  ['node-353', 'node-352'],
+  ['node-353', 'node-350'],
+  ['node-232', 'node-350'],
+  ['node-350', 'node-356'],
+  ['preschool-exit', 'node-356']
 ];
 
 /*************************************************
